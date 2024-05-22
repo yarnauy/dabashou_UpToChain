@@ -19,7 +19,7 @@
 
     <!-- Favicon -->
     <!-- <link rel="icon" type="image/x-icon" href="../assets/img/favicon/favicon.ico" /> -->
-    <link rel="icon" type="image/x-icon" href="img/favicon.ico" />
+    <link rel="icon" type="image/png" href="img/logo.png" />
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.font.im" />
@@ -127,7 +127,7 @@
                         </div> -->
                       </div>
                       <span class="fw-medium d-block mb-1">需报账总额</span>
-                      <h4 class="card-title mb-2" th:text="${statItems[0].total}" ></h4>
+                      <h4 class="card-title mb-2" id="current-total" th:text="${statItems[0].total}" ></h4>
                       <!-- <small class="text-success fw-medium"><i class="bx bx-up-arrow-alt"></i> +28.14%</small> -->
                     </div>
                   </div>
@@ -138,7 +138,7 @@
                       <div class="card-title d-flex align-items-start justify-content-between">
                       </div>
                       <span class="fw-medium d-block mb-1">可回收物奖励额</span>
-                      <h4 class="card-title mb-2" th:text="${statItems[0].wasteSum}"></h4>
+                      <h4 class="card-title mb-2" id="current-waste" th:text="${statItems[0].wasteSum}"></h4>
                       <!-- <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -13.24%</small> -->
                     </div>
                   </div>
@@ -149,7 +149,7 @@
                       <div class="card-title d-flex align-items-start justify-content-between">
                       </div>
                       <span class="fw-medium d-block mb-1">小区奖励额</span>
-                      <h4 class="card-title mb-2" th:text="${statItems[0].rewardSum}">￥1,286</h4>
+                      <h4 class="card-title mb-2" id="current-reward" th:text="${statItems[0].rewardSum}">￥1,286</h4>
                       <!-- <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -13.24%</small> -->
                     </div>
                   </div>
@@ -160,7 +160,7 @@
                       <div class="card-title d-flex align-items-start justify-content-between">
                       </div>
                       <span class="fw-medium d-block mb-1" >合同款额</span>
-                      <h4 class="card-title mb-2" th:text="${statItems[0].contractSum}"></h4>
+                      <h4 class="card-title mb-2" id="current-contract" th:text="${statItems[0].contractSum}"></h4>
                       <!-- <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -13.24%</small> -->
                     </div>
                   </div>
@@ -177,7 +177,7 @@
                         <span class="input-group-text">选择起始日期</span>
                         <input class="form-control" type="month" th:value="${from}" id="html5-month-from" />
                         <input class="form-control" type="month" th:value="${to}" id="html5-month-to" />
-                        <button class="btn btn-outline-primary" type="button" id="button-addon2">检索</button>
+                        <button class="btn btn-outline-primary" type="button" id="button-query">检索</button>
                       </div>
                     </div>
                   </div>
@@ -197,9 +197,9 @@
                           <th>链上凭证</th>
                         </tr>
                       </thead>
-                      <tbody class="table-border-bottom-0">
+                      <tbody class="table-border-bottom-0" id="data-table-body">
                       <tr th:each="statItem,iStat: ${statItems}">
-                        <td th:text="${iStat.index}" />
+                        <td th:text="${iStat.index+1}" />
                         <td th:text="${statItem.date}" />
                         <td th:text="${statItem.wasteSum}" />
                         <td th:text="${statItem.rewardSum}" />
@@ -255,6 +255,104 @@
     <script src=" js/bootstrap.js "></script>
     <script src=" js/perfect-scrollbar.js "></script>
     <script src=" js/menu.js "></script>
+
+    <script>
+
+      function refreshCurrent() {
+        var currentDate = new Date();
+        var currentYear = currentDate.getFullYear();
+        var currentMonth = currentDate.getMonth() + 1;
+        var fromDate = currentYear*12 + currentMonth;
+
+        $.ajax({
+          url: '/statapi/select',
+          method: 'GET',
+          data: {
+            from: fromDate,
+            to: fromDate
+          },
+          success: function(response) {
+            // console.log(response);
+            if (response.length > 0){
+              item = response[0];
+              $('#current-total').text(item.total);
+              $('#current-waste').text(item.wasteSum);
+              $('#current-reward').text(item.rewardSum);
+              $('#current-contract').text(item.contractSum);
+            }
+          },
+          error: function(error) {
+            console.error('Error fetching data:', error);
+          }
+        });
+
+
+      }
+
+      // 确保页面加载完成后，开始定时调用函数
+      window.onload = function() {
+        // 设置定时器，每隔3000毫秒（即3秒）调用一次myFunction函数
+        setInterval(refreshCurrent, 3000);
+      };
+
+
+
+      function yearMonthStringToNumber(dateString) {
+        // 拆分日期字符串，获取年份和月份
+        const [year, month] = dateString.split('-').map(Number);
+
+        // 计算年份和月份对应的总月数
+        return year * 12 + month;
+      }
+
+      $(document).ready(function() {
+        $('#button-query').on('click', function() {
+          // 获取输入的日期值
+          var fromDate = yearMonthStringToNumber($('#html5-month-from').val());
+          var toDate = yearMonthStringToNumber($('#html5-month-to').val());
+
+          // 打印调试
+          console.log('From month:', fromDate);
+          console.log('To month:', toDate);
+
+          // 调用服务接口（假设服务接口是 /api/getData）
+          $.ajax({
+            url: '/statapi/select',
+            method: 'GET',
+            data: {
+              from: fromDate,
+              to: toDate
+            },
+            success: function(response) {
+              // 假设response是包含新数据的数组
+              // 清空表格
+
+              console.log(response)
+              var tableBody = $('#data-table-body');
+              tableBody.empty();
+
+              response.forEach(function(item, index) {
+                var newRow = `
+                                <tr>
+                                    <td>${index+1}</td>
+                                    <td>${item.date}</td>
+                                    <td>${item.wasteSum}</td>
+                                    <td>${item.rewardSum}</td>
+                                    <td>${item.contractSum}</td>
+                                    <td>${item.total}</td>
+                                    <td>${item.blockHash}</td>
+                                </tr>
+                            `;
+                tableBody.append(newRow);
+              });
+            },
+            error: function(error) {
+              console.error('Error fetching data:', error);
+            }
+          });
+        });
+      });
+    </script>
 
     <!-- endbuild -->
 

@@ -55,7 +55,8 @@ public class StatController {
 
     public String convertTotalMonthToDateString(int totalmonth, boolean simple){
         int years =totalmonth / 12;
-        int months = totalmonth % 12;
+        String months = String.format("%02d",  totalmonth % 12);
+
         if (simple){
             return years + "-" + (months);
         }
