@@ -1,15 +1,16 @@
 package org.example.dabashou_spring_demo.controller;
 
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.example.dabashou_spring_demo.model.bo.*;
 import org.example.dabashou_spring_demo.service.AlgoRegistryService;
 import org.example.dabashou_spring_demo.service.WasteManagerService;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple3;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.List;
@@ -103,5 +104,8 @@ public class WasteManagerController {
 
         return returnObj;
     }
+
+
+
 
 }

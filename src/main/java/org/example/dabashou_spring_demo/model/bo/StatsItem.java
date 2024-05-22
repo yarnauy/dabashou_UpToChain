@@ -4,7 +4,7 @@ import java.math.BigInteger;
 import org.fisco.bcos.sdk.v3.codec.datatypes.StaticStruct;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 
-public  class StatsItem extends StaticStruct {
+public  class StatsItem extends StaticStruct  {
   public BigInteger month;
 
   public BigInteger wasteSum;

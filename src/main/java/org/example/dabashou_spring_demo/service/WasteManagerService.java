@@ -2,6 +2,7 @@ package org.example.dabashou_spring_demo.service;
 
 import java.lang.Exception;
 import java.lang.String;
+import java.math.BigInteger;
 import java.util.Arrays;
 import javax.annotation.PostConstruct;
 import lombok.Data;
@@ -88,5 +89,9 @@ public class WasteManagerService {
 
   public CallResponse _statData() throws Exception {
     return this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.WasteManagerAbi, "_statData", Arrays.asList());
+  }
+
+  public String getBlockHashByNumber(BigInteger num){
+    return client.getBlockHashByNumber(num).getResult();
   }
 }
