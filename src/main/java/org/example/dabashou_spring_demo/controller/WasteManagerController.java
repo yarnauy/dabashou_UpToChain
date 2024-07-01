@@ -24,8 +24,8 @@ public class WasteManagerController {
 
     @GetMapping("dispose")
     public String dispose() throws Exception {
-        BigInteger timestamp = BigInteger.valueOf(1715666453);
-        String orderID = "order123";
+        BigInteger timestamp = BigInteger.valueOf(1719802693);
+        String orderID = "order125";
         String userID = "user113";
         String deviceID = "device143";
         String binID = "bin123";
@@ -36,7 +36,7 @@ public class WasteManagerController {
         String wasteType = "干垃圾";
         BigInteger quantity = BigInteger.valueOf(1230);
         BigInteger score = BigInteger.valueOf(100);
-        BigInteger resourceCoin = BigInteger.valueOf(100);
+        BigInteger resourceCoin = BigInteger.valueOf(300);
 
         DisposeItem item = new DisposeItem(timestamp,orderID,userID,deviceID,binID,courtID,imagesHash,creditParamsHash,creditAlgoID,wasteType,quantity,score,resourceCoin);
         WasteManagerDisposeInputBO input = new WasteManagerDisposeInputBO(item);

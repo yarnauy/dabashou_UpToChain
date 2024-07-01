@@ -127,7 +127,7 @@
                         </div> -->
                       </div>
                       <span class="fw-medium d-block mb-1">需报账总额</span>
-                      <h4 class="card-title mb-2" id="current-total" th:text="${statItems[0].total}" ></h4>
+                      <h4 class="card-title mb-2" id="current-total" th:text="${currentItem.total}" ></h4>
                       <!-- <small class="text-success fw-medium"><i class="bx bx-up-arrow-alt"></i> +28.14%</small> -->
                     </div>
                   </div>
@@ -138,7 +138,7 @@
                       <div class="card-title d-flex align-items-start justify-content-between">
                       </div>
                       <span class="fw-medium d-block mb-1">可回收物奖励额</span>
-                      <h4 class="card-title mb-2" id="current-waste" th:text="${statItems[0].wasteSum}"></h4>
+                      <h4 class="card-title mb-2" id="current-waste" th:text="${currentItem.wasteSum}"></h4>
                       <!-- <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -13.24%</small> -->
                     </div>
                   </div>
@@ -149,7 +149,7 @@
                       <div class="card-title d-flex align-items-start justify-content-between">
                       </div>
                       <span class="fw-medium d-block mb-1">小区奖励额</span>
-                      <h4 class="card-title mb-2" id="current-reward" th:text="${statItems[0].rewardSum}">￥1,286</h4>
+                      <h4 class="card-title mb-2" id="current-reward" th:text="${currentItem.rewardSum}">￥1,286</h4>
                       <!-- <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -13.24%</small> -->
                     </div>
                   </div>
@@ -160,7 +160,7 @@
                       <div class="card-title d-flex align-items-start justify-content-between">
                       </div>
                       <span class="fw-medium d-block mb-1" >合同款额</span>
-                      <h4 class="card-title mb-2" id="current-contract" th:text="${statItems[0].contractSum}"></h4>
+                      <h4 class="card-title mb-2" id="current-contract" th:text="${currentItem.contractSum}"></h4>
                       <!-- <small class="text-danger fw-medium"><i class="bx bx-down-arrow-alt"></i> -13.24%</small> -->
                     </div>
                   </div>

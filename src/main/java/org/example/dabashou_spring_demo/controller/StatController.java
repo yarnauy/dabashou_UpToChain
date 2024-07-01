@@ -39,6 +39,22 @@ public class StatController {
         BigInteger from = BigInteger.valueOf(year*12+month-6);
         BigInteger to = BigInteger.valueOf(year*12+month);
 
+        BigInteger current = to;
+
+        WasteManagerSelectInputBO currentInput = new WasteManagerSelectInputBO(to,to);
+        List<ArrayList> currentList = (List<ArrayList>)service.select(currentInput).getReturnObject().get(0);
+        StatsViewItem currentItem;
+        if(currentList.size() == 0) {
+            String currentDate = convertTotalMonthToDateString(current.intValue(), false);
+            currentItem = new StatsViewItem(currentDate, BigInteger.valueOf(0), BigInteger.valueOf(0), BigInteger.valueOf(0),"0");
+        }else{
+            ArrayList item_r = currentList.get(0);
+            int totalmonth =  ((BigInteger)(item_r.get(0))).intValue();
+            String date = convertTotalMonthToDateString(totalmonth, false);
+            currentItem = new StatsViewItem(date,(BigInteger)item_r.get(1),(BigInteger)item_r.get(2),(BigInteger)item_r.get(3), service.getBlockHashByNumber((BigInteger)item_r.get(4)));
+        }
+
+
         WasteManagerSelectInputBO input = new WasteManagerSelectInputBO(from,to);
         List<ArrayList> a = (List<ArrayList>)service.select(input).getReturnObject().get(0);
         StatsViewItem[] items = new StatsViewItem[a.size()];
@@ -49,6 +65,7 @@ public class StatController {
             StatsViewItem item_a = new StatsViewItem(date,(BigInteger)item_r.get(1),(BigInteger)item_r.get(2),(BigInteger)item_r.get(3), service.getBlockHashByNumber((BigInteger)item_r.get(4)));
             items[i] = item_a;
         }
+        model.addAttribute("currentItem",currentItem);
         model.addAttribute("statItems",items);
         model.addAttribute("from", convertTotalMonthToDateString(year*12+month-6,true));
         model.addAttribute("to", convertTotalMonthToDateString(year*12+month,true));
