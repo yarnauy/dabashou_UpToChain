@@ -34,6 +34,8 @@ public class StatController {
         int month = calendar.get(Calendar.MONTH) + 1;
         int year = calendar.get(Calendar.YEAR);
 
+        System.out.println("月份"+month);
+
         BigInteger from = BigInteger.valueOf(year*12+month-6);
         BigInteger to = BigInteger.valueOf(year*12+month);
 

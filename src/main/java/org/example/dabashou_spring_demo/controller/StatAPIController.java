@@ -36,6 +36,8 @@ public class StatAPIController {
             to = year*12+month;
         }
 
+        System.out.println("from: "+from +"to: "+ to);
+
         WasteManagerSelectInputBO input = new WasteManagerSelectInputBO(BigInteger.valueOf(from),BigInteger.valueOf(to));
         List<ArrayList> a = (List<ArrayList>)service.select(input).getReturnObject().get(0);
         StatsViewItem[] items = new StatsViewItem[a.size()];
