@@ -1,13 +1,14 @@
 package org.example.dabashou_spring_demo.model.bo;
 
-import java.lang.String;
-import java.math.BigInteger;
+import org.fisco.bcos.sdk.v3.codec.datatypes.Address;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicStruct;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 
-public class DisposeItem extends DynamicStruct {
+import java.math.BigInteger;
+
+public  class DisposeItem extends DynamicStruct {
   public BigInteger timestamp;
 
   public String orderID;
@@ -34,11 +35,13 @@ public class DisposeItem extends DynamicStruct {
 
   public BigInteger resourceCoin;
 
+  public String receiverAddress;
+
   public DisposeItem(Uint256 timestamp, Utf8String orderID, Utf8String userID, Utf8String deviceID,
       Utf8String binID, Utf8String courtID, Bytes32 imagesHash, Bytes32 creditParamsHash,
       Utf8String creditAlgoID, Utf8String wasteType, Uint256 quantity, Uint256 score,
-      Uint256 resourceCoin) {
-    super(timestamp,orderID,userID,deviceID,binID,courtID,imagesHash,creditParamsHash,creditAlgoID,wasteType,quantity,score,resourceCoin);
+      Uint256 resourceCoin, Address receiverAddress) {
+    super(timestamp,orderID,userID,deviceID,binID,courtID,imagesHash,creditParamsHash,creditAlgoID,wasteType,quantity,score,resourceCoin,receiverAddress);
     this.timestamp = timestamp.getValue();
     this.orderID = orderID.getValue();
     this.userID = userID.getValue();
@@ -52,12 +55,14 @@ public class DisposeItem extends DynamicStruct {
     this.quantity = quantity.getValue();
     this.score = score.getValue();
     this.resourceCoin = resourceCoin.getValue();
+    this.receiverAddress = receiverAddress.getValue();
   }
 
   public DisposeItem(BigInteger timestamp, String orderID, String userID, String deviceID,
       String binID, String courtID, byte[] imagesHash, byte[] creditParamsHash, String creditAlgoID,
-      String wasteType, BigInteger quantity, BigInteger score, BigInteger resourceCoin) {
-    super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(userID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(deviceID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(binID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(courtID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(imagesHash),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(creditParamsHash),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(creditAlgoID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(wasteType),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(quantity),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(score),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(resourceCoin));
+      String wasteType, BigInteger quantity, BigInteger score, BigInteger resourceCoin,
+      String receiverAddress) {
+    super(new Uint256(timestamp),new Utf8String(orderID),new Utf8String(userID),new Utf8String(deviceID),new Utf8String(binID),new Utf8String(courtID),new Bytes32(imagesHash),new Bytes32(creditParamsHash),new Utf8String(creditAlgoID),new Utf8String(wasteType),new Uint256(quantity),new Uint256(score),new Uint256(resourceCoin),new Address(receiverAddress));
     this.timestamp = timestamp;
     this.orderID = orderID;
     this.userID = userID;
@@ -71,5 +76,6 @@ public class DisposeItem extends DynamicStruct {
     this.quantity = quantity;
     this.score = score;
     this.resourceCoin = resourceCoin;
+    this.receiverAddress = receiverAddress;
   }
 }

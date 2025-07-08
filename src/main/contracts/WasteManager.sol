@@ -4,8 +4,9 @@ pragma experimental ABIEncoderV2;
 
 import "./WasteData.sol";
 import "./RewardData.sol";
-import "./StatsData.sol";
 import "./Auth.sol";
+import "./ResourceCoinManager.sol";
+import "./AlgoData.sol";
 
 
 contract WasteManager is Auth{
@@ -13,7 +14,9 @@ contract WasteManager is Auth{
 
     WasteData public _wasteData;
     RewardData public _rewardData;
-    StatsData public _statData;
+    ResourceCoinManager public _resouceCoin;
+    address public rewardAccount;
+    AlgoData public _algoData;
 
     uint256 constant SECONDS_PER_DAY = 24 * 60 * 60;
     int256 constant OFFSET19700101 = 2440588;
@@ -49,63 +52,100 @@ contract WasteManager is Auth{
     }
 
 
-    constructor() {
+    constructor(address resouceCoinAddr, address _rewardAccount) {
         _wasteData = new WasteData();
         _rewardData = new RewardData();
-        _statData = new StatsData(true);
+        _resouceCoin = ResourceCoinManager(resouceCoinAddr);
+        rewardAccount = _rewardAccount;
+        _algoData = new AlgoData();
     }
 
     function dispose(WasteData.DisposeItem memory item) public auth returns(int32){
-
-
+        // receiverAddress由业务方传入或在此处赋值
+        // 例如：item.receiverAddress = msg.sender; // 如需自动赋值
         int32 insertRes =  _wasteData.insert( item );
-        if(insertRes >0 ){
-            uint256 month = timestampToTotalMonth(item.timestamp);
-            insertRes = _statData.add_waste(month, item.resourceCoin);
-        }else{
-            return 0;
-        }
-
+        // if(insertRes >0 ){
+        //     uint256 month = timestampToTotalMonth(item.timestamp);
+        //     insertRes = _statData.add_waste(month, item.resourceCoin);
+        // }else{
+        //     return 0;
+        // }
+        // return insertRes;
         return insertRes;
-
     }
 
     function update(WasteData.UpdateItem memory item) public auth returns(int32 res){
-
         //TODO require exist
         uint256 old = _wasteData.update(item);
-        uint256 month = timestampToTotalMonth(item.timestamp);
-
-        if (item.resourceCoin < old){
-            res = _statData.update_waste(month, old - item.resourceCoin, false);
-        }else{
-            res = _statData.update_waste(month, item.resourceCoin - old, true);
-        }
-
-    }
-
-    function issueReward(RewardData.RewardItem memory item) public auth returns(int32 res){
-
-        int32 insertRes =  _rewardData.insert(item );
-        if(insertRes >0 ){
-            uint256 month= timestampToTotalMonth(item.timestamp);
-            insertRes = _statData.add_reward(month, item.resourceCoin);
-        }else{
-            return 0;
-        }
-        return insertRes;
-    }
-
-    function select(StatsData.StatsItem memory test) public view  returns(uint256)
-    {
+        
         return 0;
     }
 
+    // function select(StatsData.StatsItem memory test) public view  returns(uint256)
+    // {
+    //     // return 0;
+    //     // return _statData.select(test);
+    //     return 0;
+    // }
 
-    function select(uint256 monthLow, uint256 monthHigh) public view returns (StatsData.StatsItem[] memory)
-    {
-        return _statData.select(monthLow,monthHigh);
+
+    // function select(uint256 monthLow, uint256 monthHigh) public view returns (StatsData.StatsItem[] memory)
+    // {
+    //     // return _statData.select(monthLow,monthHigh);
+    //     StatsData.StatsItem[] memory empty;
+    //     return empty;
+    // }
+
+    event Settle(uint256 timestamp, string targerOrderID, string orderID, address toAddress, uint256 amount);
+
+    function settle(uint256 timestamp, string memory targerOrderID, string memory orderID, address toAddress, uint256 amount) public auth {
+        require(toAddress != address(0x0), "toAddress is zero");
+        require(amount > 0, "amount must be positive");
+        uint256 rewardBalance = _resouceCoin.balanceOf(rewardAccount);
+        require(rewardBalance >= amount, "reward account balance not enough");
+        // 构造TransferItem结构体
+        ResourceCoinManager.TransferItem memory item = ResourceCoinManager.TransferItem({
+            orderID: orderID,
+            fromUserID: "admin",
+            toUserID: targerOrderID,
+            fromAddress: rewardAccount,
+            toAddress: toAddress,
+            amount: amount
+        });
+        _resouceCoin.transferEvidence(item);
+        emit Settle(timestamp, targerOrderID, orderID, toAddress, amount);
     }
 
+    function disposeReward(RewardData.DisposeRewardItem memory item) public auth returns(int32) {
+        return _rewardData.insertDisposeReward(item);
+    }
+
+    function propertyReward(RewardData.PropertyRewardItem memory item) public auth returns(int32) {
+        return _rewardData.insertPropertyReward(item);
+    }
+
+    // 查询指定orderID的投放记录
+    function getDispose(string memory orderID) public view returns (WasteData.DisposeItem memory) {
+        return _wasteData.selectDisposeByOrderID(orderID);
+    }
+
+    // 算法注册
+    function register(uint256 timestamp, string memory algoID, bytes32 algoHash, string memory comments) public returns(int32 res){
+        require(!_algoData.exist(algoID),"algo exists");
+        res =  _algoData.insert(timestamp,algoID,algoHash,comments);
+    }
+    // 查询算法
+    function selectAlgo(string memory algoID) public view returns (uint256 , bytes32, string memory) {
+        return _algoData.select(algoID);
+    }
+
+    // 按orderID查询DisposeRewardItem
+    function getDisposeRewardByOrderID(string memory orderID) public view returns (RewardData.DisposeRewardItem memory) {
+        return _rewardData.getDisposeRewardByOrderID(orderID);
+    }
+    // 按orderID查询PropertyRewardItem
+    function getPropertyRewardByOrderID(string memory orderID) public view returns (RewardData.PropertyRewardItem memory) {
+        return _rewardData.getPropertyRewardByOrderID(orderID);
+    }
 
 }

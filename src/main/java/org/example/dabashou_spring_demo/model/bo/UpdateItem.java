@@ -1,14 +1,17 @@
 package org.example.dabashou_spring_demo.model.bo;
 
-import java.lang.String;
-import java.math.BigInteger;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicStruct;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32;
+import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Int256;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 
-public class UpdateItem extends DynamicStruct {
+import java.math.BigInteger;
+
+public  class UpdateItem extends DynamicStruct {
   public BigInteger timestamp;
+
+  public String disposeOrderID;
 
   public String orderID;
 
@@ -32,18 +35,17 @@ public class UpdateItem extends DynamicStruct {
 
   public BigInteger score;
 
-  public BigInteger resourceCoin;
-
-  public BigInteger version;
+  public BigInteger resourceCoinChange;
 
   public String comment;
 
-  public UpdateItem(Uint256 timestamp, Utf8String orderID, Utf8String userID, Utf8String deviceID,
-      Utf8String binID, Utf8String courtID, Bytes32 imagesHash, Bytes32 creditParamsHash,
-      Utf8String creditAlgoID, Utf8String wasteType, Uint256 quantity, Uint256 score,
-      Uint256 resourceCoin, Uint256 version, Utf8String comment) {
-    super(timestamp,orderID,userID,deviceID,binID,courtID,imagesHash,creditParamsHash,creditAlgoID,wasteType,quantity,score,resourceCoin,version,comment);
+  public UpdateItem(Uint256 timestamp, Utf8String disposeOrderID, Utf8String orderID,
+      Utf8String userID, Utf8String deviceID, Utf8String binID, Utf8String courtID,
+      Bytes32 imagesHash, Bytes32 creditParamsHash, Utf8String creditAlgoID, Utf8String wasteType,
+      Uint256 quantity, Uint256 score, Int256 resourceCoinChange, Utf8String comment) {
+    super(timestamp,disposeOrderID,orderID,userID,deviceID,binID,courtID,imagesHash,creditParamsHash,creditAlgoID,wasteType,quantity,score,resourceCoinChange,comment);
     this.timestamp = timestamp.getValue();
+    this.disposeOrderID = disposeOrderID.getValue();
     this.orderID = orderID.getValue();
     this.userID = userID.getValue();
     this.deviceID = deviceID.getValue();
@@ -55,17 +57,17 @@ public class UpdateItem extends DynamicStruct {
     this.wasteType = wasteType.getValue();
     this.quantity = quantity.getValue();
     this.score = score.getValue();
-    this.resourceCoin = resourceCoin.getValue();
-    this.version = version.getValue();
+    this.resourceCoinChange = resourceCoinChange.getValue();
     this.comment = comment.getValue();
   }
 
-  public UpdateItem(BigInteger timestamp, String orderID, String userID, String deviceID,
-      String binID, String courtID, byte[] imagesHash, byte[] creditParamsHash, String creditAlgoID,
-      String wasteType, BigInteger quantity, BigInteger score, BigInteger resourceCoin,
-      BigInteger version, String comment) {
-    super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(userID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(deviceID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(binID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(courtID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(imagesHash),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(creditParamsHash),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(creditAlgoID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(wasteType),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(quantity),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(score),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(resourceCoin),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(version),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comment));
+  public UpdateItem(BigInteger timestamp, String disposeOrderID, String orderID, String userID,
+      String deviceID, String binID, String courtID, byte[] imagesHash, byte[] creditParamsHash,
+      String creditAlgoID, String wasteType, BigInteger quantity, BigInteger score,
+      BigInteger resourceCoinChange, String comment) {
+    super(new Uint256(timestamp),new Utf8String(disposeOrderID),new Utf8String(orderID),new Utf8String(userID),new Utf8String(deviceID),new Utf8String(binID),new Utf8String(courtID),new Bytes32(imagesHash),new Bytes32(creditParamsHash),new Utf8String(creditAlgoID),new Utf8String(wasteType),new Uint256(quantity),new Uint256(score),new Int256(resourceCoinChange),new Utf8String(comment));
     this.timestamp = timestamp;
+    this.disposeOrderID = disposeOrderID;
     this.orderID = orderID;
     this.userID = userID;
     this.deviceID = deviceID;
@@ -77,8 +79,7 @@ public class UpdateItem extends DynamicStruct {
     this.wasteType = wasteType;
     this.quantity = quantity;
     this.score = score;
-    this.resourceCoin = resourceCoin;
-    this.version = version;
+    this.resourceCoinChange = resourceCoinChange;
     this.comment = comment;
   }
 }
