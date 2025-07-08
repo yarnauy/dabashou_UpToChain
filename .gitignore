@@ -20,10 +20,10 @@ hs_err_pid*
 */out/
 out/
 dist/
-gradle.properties
+#gradle.properties
 
 # Ignore Gradle GUI config
-gradle-app.setting
+#gradle-app.setting
 
 # Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
 !gradle-wrapper.jar
@@ -36,8 +36,8 @@ gradle-app.setting
 
 .idea
 *.iml
-*.crt
-*.key
+#*.crt
+#*.key
 src/test/resources/solidity/*
 src/test/java/org/fisco/bcos/temp/*
 # OS X
