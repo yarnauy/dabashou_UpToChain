@@ -1,13 +1,13 @@
 package org.example.dabashou_spring_demo.model.bo;
 
+import java.lang.String;
+import java.math.BigInteger;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Address;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicStruct;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 
-import java.math.BigInteger;
-
-public  class Approval extends DynamicStruct {
+public class Approval extends DynamicStruct {
   public BigInteger timestamp;
 
   public String evidenceID;
@@ -22,7 +22,7 @@ public  class Approval extends DynamicStruct {
   }
 
   public Approval(BigInteger timestamp, String evidenceID, String approver) {
-    super(new Uint256(timestamp),new Utf8String(evidenceID),new Address(approver));
+    super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID),new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver));
     this.timestamp = timestamp;
     this.evidenceID = evidenceID;
     this.approver = approver;

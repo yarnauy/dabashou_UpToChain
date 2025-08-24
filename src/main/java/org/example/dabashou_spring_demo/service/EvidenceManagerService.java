@@ -1,9 +1,17 @@
 package org.example.dabashou_spring_demo.service;
 
+import java.lang.Exception;
+import java.lang.String;
+import java.util.Arrays;
+import javax.annotation.PostConstruct;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dabashou_spring_demo.constants.ContractConstants;
-import org.example.dabashou_spring_demo.model.bo.*;
+import org.example.dabashou_spring_demo.model.bo.EvidenceManagerApproveEvidenceInputBO;
+import org.example.dabashou_spring_demo.model.bo.EvidenceManagerCreateEvidenceInputBO;
+import org.example.dabashou_spring_demo.model.bo.EvidenceManagerGetApprovalsInputBO;
+import org.example.dabashou_spring_demo.model.bo.EvidenceManagerGetEvidenceInputBO;
+import org.example.dabashou_spring_demo.model.bo.EvidenceManagerVerifyEvidenceInputBO;
 import org.fisco.bcos.sdk.v3.client.Client;
 import org.fisco.bcos.sdk.v3.transaction.manager.AssembleTransactionProcessor;
 import org.fisco.bcos.sdk.v3.transaction.manager.TransactionProcessorFactory;
@@ -12,9 +20,6 @@ import org.fisco.bcos.sdk.v3.transaction.model.dto.TransactionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.PostConstruct;
-import java.util.Arrays;
 
 @Service
 @NoArgsConstructor
@@ -33,8 +38,17 @@ public class EvidenceManagerService {
     this.txProcessor = TransactionProcessorFactory.createAssembleTransactionProcessor(this.client, this.client.getCryptoSuite().getCryptoKeyPair());
   }
 
-  public CallResponse getEvidence(EvidenceManagerGetEvidenceInputBO input) throws Exception {
-    return this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.EvidenceManagerAbi, "getEvidence", input.toArgs());
+  public org.example.dabashou_spring_demo.model.bo.EvidenceItem getEvidence(EvidenceManagerGetEvidenceInputBO input) throws Exception {
+    Object result = this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.EvidenceManagerAbi, "getEvidence", input.toArgs()).getReturnObject();
+    
+    // 如果合约返回的是ArrayList，尝试从列表中构造EvidenceItem
+    if (result instanceof java.util.ArrayList) {
+      java.util.ArrayList<?> resultList = (java.util.ArrayList<?>) result;
+      return org.example.dabashou_spring_demo.model.bo.EvidenceItem.fromArrayList(resultList);
+    }
+    
+    // 否则返回null
+    return null;
   }
 
   public TransactionResponse approveEvidence(EvidenceManagerApproveEvidenceInputBO input) throws

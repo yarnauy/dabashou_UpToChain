@@ -1,12 +1,14 @@
 package org.example.dabashou_spring_demo.controller;
 
 import org.example.dabashou_spring_demo.model.bo.*;
+import org.example.dabashou_spring_demo.model.bo.EvidenceItem;
 import org.example.dabashou_spring_demo.service.EvidenceManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("evidencemanager")
@@ -18,7 +20,7 @@ public class EvidenceManagerController {
     public Object createEvidence() throws Exception {
         EvidenceManagerCreateEvidenceInputBO input = new EvidenceManagerCreateEvidenceInputBO(
                 BigInteger.valueOf(1719800000),
-                "evidence001",
+                "evidence002",
                 new byte[32],
                 BigInteger.valueOf(1),
                 new byte[0],
@@ -31,7 +33,7 @@ public class EvidenceManagerController {
     public Object approveEvidence() throws Exception {
         EvidenceManagerApproveEvidenceInputBO input = new EvidenceManagerApproveEvidenceInputBO(
                 BigInteger.valueOf(1719801000),
-                "evidence001"
+                "evidence002"
         );
         return service.approveEvidence(input).getTransactionReceipt().toString();
     }
@@ -39,16 +41,16 @@ public class EvidenceManagerController {
     @GetMapping("verifyEvidence")
     public Object verifyEvidence() throws Exception {
         EvidenceManagerVerifyEvidenceInputBO input = new EvidenceManagerVerifyEvidenceInputBO(
-                "evidence001",
+                "evidence002",
                 new byte[32]
         );
         return service.verifyEvidence(input).getReturnObject();
     }
 
     @GetMapping("getEvidence")
-    public Object getEvidence() throws Exception {
-        EvidenceManagerGetEvidenceInputBO input = new EvidenceManagerGetEvidenceInputBO("evidence001");
-        return service.getEvidence(input).getReturnObject();
+    public EvidenceItem getEvidence() throws Exception {
+        EvidenceManagerGetEvidenceInputBO input = new EvidenceManagerGetEvidenceInputBO("evidence002");
+        return service.getEvidence(input);
     }
 
     @GetMapping("getApprovals")

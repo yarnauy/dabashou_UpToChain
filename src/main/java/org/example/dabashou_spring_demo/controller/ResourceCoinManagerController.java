@@ -30,9 +30,9 @@ public class ResourceCoinManagerController {
     }
 
     @GetMapping("balanceOf")
-    public Object balanceOf() throws Exception {
+    public java.math.BigInteger balanceOf() throws Exception {
         ResourceCoinManagerBalanceOfInputBO input = new ResourceCoinManagerBalanceOfInputBO("0x0000000000000000000000000000000000000001");
-        return service.balanceOf(input).getReturnObject();
+        return service.balanceOf(input);
     }
 
     @GetMapping("issueEvidence")
@@ -44,7 +44,7 @@ public class ResourceCoinManagerController {
 
     @GetMapping("transferEvidence")
     public Object transferEvidence() throws Exception {
-        TransferItem item = new TransferItem("order002", "user001", "user002", "0x0000000000000000000000000000000000000001", "0x0000000000000000000000000000000000000002", java.math.BigInteger.valueOf(50L));
+        TransferItem item = new TransferItem("order002", "user001", "user002", "0x0000000000000000000000000000000000000001", "0x0000000000000000000000000000000000000002", java.math.BigInteger.valueOf(50L),"备注信息123");
         ResourceCoinManagerTransferEvidenceInputBO input = new ResourceCoinManagerTransferEvidenceInputBO(item);
         return service.transferEvidence(input).getTransactionReceipt().toString();
     }

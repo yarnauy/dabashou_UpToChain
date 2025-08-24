@@ -1,12 +1,16 @@
 package org.example.dabashou_spring_demo.controller;
 
 import org.example.dabashou_spring_demo.model.bo.*;
+import org.example.dabashou_spring_demo.model.bo.ContractResponse;
+import org.example.dabashou_spring_demo.model.bo.SignItem;
+import org.example.dabashou_spring_demo.model.bo.AdvanceItem;
 import org.example.dabashou_spring_demo.service.ContractManagerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.List;
 
 @RestController
 @RequestMapping("contractmanager")
@@ -35,8 +39,8 @@ public class ContractManagerController {
     }
 
     @GetMapping("getContractInfo")
-    public Object getContractInfo() throws Exception {
+    public ContractResponse getContractInfo() throws Exception {
         ContractManagerGetContractInfoInputBO input = new ContractManagerGetContractInfoInputBO("contract001");
-        return service.getContractInfo(input).getReturnObject();
+        return service.getContractInfo(input);
     }
 } 

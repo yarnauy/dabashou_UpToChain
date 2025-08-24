@@ -1,11 +1,11 @@
 package org.example.dabashou_spring_demo.model.bo;
 
+import java.lang.String;
+import java.math.BigInteger;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Address;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicStruct;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
-
-import java.math.BigInteger;
 
 public  class WithdrawItem extends DynamicStruct {
   public String orderID;
@@ -30,7 +30,7 @@ public  class WithdrawItem extends DynamicStruct {
 
   public WithdrawItem(String orderID, String userID, String userAddress, BigInteger amount,
       String receiverAccount) {
-    super(new Utf8String(orderID),new Utf8String(userID),new Address(userAddress),new Uint256(amount),new Utf8String(receiverAccount));
+    super(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(userID),new org.fisco.bcos.sdk.v3.codec.datatypes.Address(userAddress),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(amount),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(receiverAccount));
     this.orderID = orderID;
     this.userID = userID;
     this.userAddress = userAddress;

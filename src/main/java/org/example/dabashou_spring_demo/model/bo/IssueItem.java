@@ -1,13 +1,13 @@
 package org.example.dabashou_spring_demo.model.bo;
 
+import java.lang.String;
+import java.math.BigInteger;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Address;
 import org.fisco.bcos.sdk.v3.codec.datatypes.DynamicStruct;
 import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 
-import java.math.BigInteger;
-
-public  class IssueItem extends DynamicStruct {
+public class IssueItem extends DynamicStruct {
   public String orderID;
 
   public String toAddress;
@@ -22,7 +22,7 @@ public  class IssueItem extends DynamicStruct {
   }
 
   public IssueItem(String orderID, String toAddress, BigInteger amount) {
-    super(new Utf8String(orderID),new Address(toAddress),new Uint256(amount));
+    super(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Address(toAddress),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(amount));
     this.orderID = orderID;
     this.toAddress = toAddress;
     this.amount = amount;

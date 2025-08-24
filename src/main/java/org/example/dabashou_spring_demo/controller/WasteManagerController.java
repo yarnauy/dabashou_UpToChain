@@ -4,6 +4,8 @@ package org.example.dabashou_spring_demo.controller;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.example.dabashou_spring_demo.model.bo.*;
+import org.example.dabashou_spring_demo.model.bo.DisposeRewardItem;
+import org.example.dabashou_spring_demo.model.bo.PropertyRewardItem;
 import org.example.dabashou_spring_demo.service.WasteManagerService;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple3;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,20 +29,21 @@ public class WasteManagerController {
     @GetMapping("dispose")
     public String dispose() throws Exception {
         BigInteger timestamp = BigInteger.valueOf(1719802693);
-        String orderID = "order125";
+        String orderID = "order126";
         String userID = "user113";
         String deviceID = "device143";
         String binID = "bin123";
         String courtID = "court113";
         byte[] imagesHash = new byte[32];
         byte[] creditParamsHash = new byte[32];
-        String creditAlgoID = "algo001";
+        BigInteger price= BigInteger.valueOf(100);
+        BigInteger reward= BigInteger.valueOf(100);
         String wasteType = "干垃圾";
         BigInteger quantity = BigInteger.valueOf(1230);
         BigInteger score = BigInteger.valueOf(100);
         BigInteger resourceCoin = BigInteger.valueOf(300);
-        String receiverAddress = "0x0000000000000000000000000000000000000001";
-        DisposeItem item = new DisposeItem(timestamp, orderID, userID, deviceID, binID, courtID, imagesHash, creditParamsHash, creditAlgoID, wasteType, quantity, score, resourceCoin, receiverAddress);
+        String receiverAddress = "0x0000000000000000000000000000000000000002";
+        DisposeItem item = new DisposeItem(timestamp, orderID, userID, deviceID, binID, courtID, imagesHash, creditParamsHash, price,reward, wasteType, quantity, score, resourceCoin, receiverAddress);
         WasteManagerDisposeInputBO input = new WasteManagerDisposeInputBO(item);
         return service.dispose(input).getTransactionReceipt().toString();
     }
@@ -51,7 +54,7 @@ public class WasteManagerController {
     @GetMapping("update")
     public String update() throws Exception {
         BigInteger timestamp = BigInteger.valueOf(1715666453);
-        String disposeOrderID = "order125";
+        String disposeOrderID = "order126";
         String orderID = "updorder126";
         String userID = "user113";
         String deviceID = "device143";
@@ -59,13 +62,14 @@ public class WasteManagerController {
         String courtID = "court113";
         byte[] imagesHash = new byte[32];
         byte[] creditParamsHash = new byte[32];
-        String creditAlgoID = "algo001";
+        BigInteger price= BigInteger.valueOf(100);
+        BigInteger reward= BigInteger.valueOf(100);
         String wasteType = "干垃圾";
         BigInteger quantity = BigInteger.valueOf(1230);
         BigInteger score = BigInteger.valueOf(100);
         BigInteger resourceCoinChange = BigInteger.valueOf(50);
         String comment = "申诉说明";
-        UpdateItem item = new UpdateItem(timestamp, disposeOrderID, orderID, userID, deviceID, binID, courtID, imagesHash, creditParamsHash, creditAlgoID, wasteType, quantity, score, resourceCoinChange, comment);
+        UpdateItem item = new UpdateItem(timestamp, disposeOrderID, orderID, userID, deviceID, binID, courtID, imagesHash, creditParamsHash, price,reward, wasteType, quantity, score, resourceCoinChange, comment);
         WasteManagerUpdateInputBO input = new WasteManagerUpdateInputBO(item);
         return service.update(input).getTransactionReceipt().toString();
     }
@@ -139,10 +143,20 @@ public class WasteManagerController {
      * 查询投放记录
      */
     @GetMapping("getDispose")
-    public Object getDispose() throws Exception {
-        String orderID = "order125";
+    public DisposeItem getDispose() throws Exception {
+        String orderID = "order126";
         WasteManagerGetDisposeInputBO input = new WasteManagerGetDisposeInputBO(orderID);
-        return service.getDispose(input).getReturnObject();
+        return service.getDispose(input);
+    }
+
+    /**
+     * 查询更新记录
+     */
+    @GetMapping("getUpdate")
+    public UpdateItem getUpdate() throws Exception {
+        String updateOrderID = "updorder126";
+        WasteManagerGetUpdateInputBO input = new WasteManagerGetUpdateInputBO(updateOrderID);
+        return service.getUpdate(input);
     }
 
     /**
@@ -159,20 +173,20 @@ public class WasteManagerController {
      * 按orderID查询投放奖励
      */
     @GetMapping("getDisposeRewardByOrderID")
-    public Object getDisposeRewardByOrderID() throws Exception {
+    public DisposeRewardItem getDisposeRewardByOrderID() throws Exception {
         String orderID = "order125";
         WasteManagerGetDisposeRewardByOrderIDInputBO input = new WasteManagerGetDisposeRewardByOrderIDInputBO(orderID);
-        return service.getDisposeRewardByOrderID(input).getReturnObject();
+        return service.getDisposeRewardByOrderID(input);
     }
 
     /**
      * 按orderID查询物业奖励
      */
     @GetMapping("getPropertyRewardByOrderID")
-    public Object getPropertyRewardByOrderID() throws Exception {
+    public PropertyRewardItem getPropertyRewardByOrderID() throws Exception {
         String orderID = "order200";
         WasteManagerGetPropertyRewardByOrderIDInputBO input = new WasteManagerGetPropertyRewardByOrderIDInputBO(orderID);
-        return service.getPropertyRewardByOrderID(input).getReturnObject();
+        return service.getPropertyRewardByOrderID(input);
     }
 
 
