@@ -7,7 +7,7 @@ import "./Cast.sol";
 
 contract RewardData {
     struct DisposeRewardItem {
-        uint256 timestamp;
+        string timestamp;
         string orderID;
         string category;
         uint256 amount;
@@ -18,7 +18,7 @@ contract RewardData {
         string comments;
     }
     struct PropertyRewardItem {
-        uint256 timestamp;
+        string timestamp;
         string orderID;
         string courtID;
         uint256 houseHoldNum;
@@ -32,8 +32,8 @@ contract RewardData {
     TableManager constant tm =  TableManager(address(0x1002));
     Table disposeRewardTable;
     Table propertyRewardTable;
-    string constant DISPOSE_REWARD_TABLE = "dispose_reward";
-    string constant PROPERTY_REWARD_TABLE = "property_reward";
+    string constant DISPOSE_REWARD_TABLE = "dispose_reward_v2";
+    string constant PROPERTY_REWARD_TABLE = "property_reward_v2";
 
     constructor() {
         // create dispose reward table
@@ -69,7 +69,7 @@ contract RewardData {
     }
     function insertDisposeReward(DisposeRewardItem memory item) public returns(int32) {
         Entry memory entry = Entry(item.orderID, new string[](8));
-        entry.fields[0] = cast.u256ToString(item.timestamp);
+        entry.fields[0] = item.timestamp;
         entry.fields[1] = item.category;
         entry.fields[2] = cast.u256ToString(item.amount);
         entry.fields[3] = cast.u256ToString(item.price);
@@ -81,7 +81,7 @@ contract RewardData {
     }
     function insertPropertyReward(PropertyRewardItem memory item) public returns(int32) {
         Entry memory entry = Entry(item.orderID, new string[](8));
-        entry.fields[0] = cast.u256ToString(item.timestamp);
+        entry.fields[0] = item.timestamp;
         entry.fields[1] = item.courtID;
         entry.fields[2] = cast.u256ToString(item.houseHoldNum);
         entry.fields[3] = cast.u256ToString(item.score);
@@ -102,7 +102,7 @@ contract RewardData {
         Entry memory entry = disposeRewardTable.select(orderID);
         require(entry.fields.length == 8, "not found");
         DisposeRewardItem memory item;
-        item.timestamp = cast.stringToU256(entry.fields[0]);
+        item.timestamp = entry.fields[0];
         item.orderID = orderID;
         item.category = entry.fields[1];
         item.amount = cast.stringToU256(entry.fields[2]);
@@ -118,7 +118,7 @@ contract RewardData {
         Entry memory entry = propertyRewardTable.select(orderID);
         require(entry.fields.length == 8, "not found");
         PropertyRewardItem memory item;
-        item.timestamp = cast.stringToU256(entry.fields[0]);
+        item.timestamp = entry.fields[0];
         item.orderID = orderID;
         item.courtID = entry.fields[1];
         item.houseHoldNum = cast.stringToU256(entry.fields[2]);

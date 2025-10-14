@@ -106,7 +106,7 @@ public class WasteManagerController {
      */
     @GetMapping("disposeReward")
     public String disposeReward() throws Exception {
-        BigInteger timestamp = BigInteger.valueOf(1719805000);
+        String timestamp = "20250101";
         String orderID = "order125";
         String category = "干垃圾";
         BigInteger amount = BigInteger.valueOf(10);
@@ -125,7 +125,7 @@ public class WasteManagerController {
      */
     @GetMapping("propertyReward")
     public String propertyReward() throws Exception {
-        BigInteger timestamp = BigInteger.valueOf(1719806000);
+        String timestamp = "20250101";
         String orderID = "order200";
         String courtID = "court113";
         BigInteger houseHoldNum = BigInteger.valueOf(100);

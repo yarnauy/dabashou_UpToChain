@@ -7,7 +7,7 @@ import org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String;
 import org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256;
 
 public class PropertyRewardItem extends DynamicStruct {
-  public BigInteger timestamp;
+  public String timestamp;
 
   public String orderID;
 
@@ -25,7 +25,7 @@ public class PropertyRewardItem extends DynamicStruct {
 
   public String comments;
 
-  public PropertyRewardItem(Uint256 timestamp, Utf8String orderID, Utf8String courtID,
+  public PropertyRewardItem(Utf8String timestamp, Utf8String orderID, Utf8String courtID,
       Uint256 houseHoldNum, Uint256 score, Uint256 unit, Uint256 ratio, Uint256 amount,
       Utf8String comments) {
     super(timestamp,orderID,courtID,houseHoldNum,score,unit,ratio,amount,comments);
@@ -40,10 +40,10 @@ public class PropertyRewardItem extends DynamicStruct {
     this.comments = comments.getValue();
   }
 
-  public PropertyRewardItem(BigInteger timestamp, String orderID, String courtID,
+  public PropertyRewardItem(String timestamp, String orderID, String courtID,
       BigInteger houseHoldNum, BigInteger score, BigInteger unit, BigInteger ratio,
       BigInteger amount, String comments) {
-    super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(courtID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(houseHoldNum),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(score),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(unit),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(ratio),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(amount),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments));
+    super(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(courtID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(houseHoldNum),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(score),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(unit),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(ratio),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(amount),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments));
     this.timestamp = timestamp;
     this.orderID = orderID;
     this.courtID = courtID;
@@ -64,18 +64,18 @@ public class PropertyRewardItem extends DynamicStruct {
     if (list == null || list.size() < 9) {
       return null;
     }
-    
+
     try {
       return new PropertyRewardItem(
-        (BigInteger) list.get(0),  // timestamp
-        (String) list.get(1),     // orderID
-        (String) list.get(2),     // courtID
-        (BigInteger) list.get(3), // houseHoldNum
-        (BigInteger) list.get(4), // score
-        (BigInteger) list.get(5), // unit
-        (BigInteger) list.get(6), // ratio
-        (BigInteger) list.get(7), // amount
-        (String) list.get(8)      // comments
+              (String) list.get(0),  // timestamp
+              (String) list.get(1),     // orderID
+              (String) list.get(2),     // courtID
+              (BigInteger) list.get(3), // houseHoldNum
+              (BigInteger) list.get(4), // score
+              (BigInteger) list.get(5), // unit
+              (BigInteger) list.get(6), // ratio
+              (BigInteger) list.get(7), // amount
+              (String) list.get(8)      // comments
       );
     } catch (Exception e) {
       return null;

@@ -59,8 +59,8 @@ contract WasteData {
     TableManager constant tm =  TableManager(address(0x1002));
     Table order_table;
     Table update_table;
-    string constant WASTE_ORDER_TABLE_NAME = "waste_order_v2";
-    string constant WASTE_UPDATE_TABLE_NAME = "waste_update_v2";
+    string constant WASTE_ORDER_TABLE_NAME = "waste_order_v3";
+    string constant WASTE_UPDATE_TABLE_NAME = "waste_update_v3";
 
     constructor () {
         // create order table
