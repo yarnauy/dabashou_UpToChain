@@ -84,26 +84,51 @@ public class ContractResponse {
         
         try {
             // 处理签名列表
-            List<SignItem> signs = null;
+            List<SignItem> signs = new java.util.ArrayList<>();
             Object signsObj = list.get(4);
             if (signsObj instanceof java.util.List) {
                 java.util.List<?> signsList = (java.util.List<?>) signsObj;
-                if (!signsList.isEmpty()) {
-                    // 这里需要根据实际的SignItem结构来处理
-                    // 暂时先设为null，后续可以根据需要完善
-                    signs = null;
+                for (Object signObj : signsList) {
+                    if (signObj instanceof java.util.List) {
+                        java.util.List<?> signItemList = (java.util.List<?>) signObj;
+                        if (signItemList.size() >= 3) {
+                            try {
+                                SignItem signItem = new SignItem(
+                                    (BigInteger) signItemList.get(0),  // timestamp
+                                    (String) signItemList.get(1),     // contractID
+                                    (String) signItemList.get(2)      // signer
+                                );
+                                signs.add(signItem);
+                            } catch (Exception e) {
+                                // 忽略单个转换失败的项目，继续处理下一个
+                            }
+                        }
+                    }
                 }
             }
             
             // 处理推进列表
-            List<AdvanceItem> advances = null;
+            List<AdvanceItem> advances = new java.util.ArrayList<>();
             Object advancesObj = list.get(5);
             if (advancesObj instanceof java.util.List) {
                 java.util.List<?> advancesList = (java.util.List<?>) advancesObj;
-                if (!advancesList.isEmpty()) {
-                    // 这里需要根据实际的AdvanceItem结构来处理
-                    // 暂时先设为null，后续可以根据需要完善
-                    advances = null;
+                for (Object advanceObj : advancesList) {
+                    if (advanceObj instanceof java.util.List) {
+                        java.util.List<?> advanceItemList = (java.util.List<?>) advanceObj;
+                        if (advanceItemList.size() >= 4) {
+                            try {
+                                AdvanceItem advanceItem = new AdvanceItem(
+                                    (BigInteger) advanceItemList.get(0),  // timestamp
+                                    (String) advanceItemList.get(1),     // contractID
+                                    (byte[]) advanceItemList.get(2),      // appendHash
+                                    (String) advanceItemList.get(3)       // comments
+                                );
+                                advances.add(advanceItem);
+                            } catch (Exception e) {
+                                // 忽略单个转换失败的项目，继续处理下一个
+                            }
+                        }
+                    }
                 }
             }
             

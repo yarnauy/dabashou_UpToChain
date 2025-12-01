@@ -5,14 +5,14 @@
 
 ### 调用方式可以参考Controller目录下的示例
 
-### 测试链信息
+### 生产链信息
 
 - 节点数：4
 - rpc addr:
-  - 123.60.185.16:20200
-  - 123.60.185.16:20201
-  - 123.60.185.16:20202
-  - 123.60.185.16:20203
+    - 124.70.133.121:20200
+    - 121.36.207.5:20200
+    - 124.71.155.41:20200
+    - 113.44.8.90:20200
 
 
 ### 客户端信息
@@ -71,3 +71,10 @@ TransactionReceipt{transactionHash='0xebc8274fd9a10289afb050b8007c990c938bdb9b5c
 </code>
 
 其中transactionHash可以作为这次事件的证据存在业务系统， status作为事件上链状态判断，0代表成功。
+
+
+## 测试链转正式链的配置更新过程 2025.12.1
+1. 更新src/main/resources/conf/下面的全部文件
+2. 更新src/main/resources/application.properties
+
+3. 注：此次更新修复了一个问题，更新了一个文件src/main/java/org/example/dabashou_spring_demo/model/bo/ContractResponse.java
