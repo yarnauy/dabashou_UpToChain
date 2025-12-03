@@ -78,3 +78,4 @@ TransactionReceipt{transactionHash='0xebc8274fd9a10289afb050b8007c990c938bdb9b5c
 2. 更新src/main/resources/application.properties
 
 3. 注：此次更新修复了一个问题，更新了一个文件src/main/java/org/example/dabashou_spring_demo/model/bo/ContractResponse.java
+区块链浏览器：http://124.71.155.41:5000/#/home 
