@@ -64,24 +64,24 @@ public class ContractData extends Contract {
         return ABI;
     }
 
-    public List<ContractData.AdvanceItem> getAdvances(String contractID) throws ContractException {
+    public List<AdvanceItem> getAdvances(String contractID) throws ContractException {
         final Function function = new Function(FUNC_GETADVANCES, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<ContractData.AdvanceItem>>() {}));
+                Arrays.<Type>asList(new Utf8String(contractID)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<AdvanceItem>>() {}));
         return executeCallWithSingleValueReturn(function, List.class);
     }
 
     public void getAdvances(String contractID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETADVANCES, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<ContractData.AdvanceItem>>() {}));
+                Arrays.<Type>asList(new Utf8String(contractID)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<AdvanceItem>>() {}));
         asyncExecuteCall(function, callback);
     }
 
     public Tuple4<BigInteger, String, byte[], String> getContractBase(String contractID) throws
             ContractException {
         final Function function = new Function(FUNC_GETCONTRACTBASE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID)), 
+                Arrays.<Type>asList(new Utf8String(contractID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Address>() {}));
         List<Type> results = executeCallWithMultipleValueReturn(function);
         return new Tuple4<BigInteger, String, byte[], String>(
@@ -93,22 +93,22 @@ public class ContractData extends Contract {
 
     public void getContractBase(String contractID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETCONTRACTBASE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID)), 
+                Arrays.<Type>asList(new Utf8String(contractID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Address>() {}));
         asyncExecuteCall(function, callback);
     }
 
-    public List<ContractData.SignItem> getSigns(String contractID) throws ContractException {
+    public List<SignItem> getSigns(String contractID) throws ContractException {
         final Function function = new Function(FUNC_GETSIGNS, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<ContractData.SignItem>>() {}));
+                Arrays.<Type>asList(new Utf8String(contractID)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<SignItem>>() {}));
         return executeCallWithSingleValueReturn(function, List.class);
     }
 
     public void getSigns(String contractID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETSIGNS, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<ContractData.SignItem>>() {}));
+                Arrays.<Type>asList(new Utf8String(contractID)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<SignItem>>() {}));
         asyncExecuteCall(function, callback);
     }
 
@@ -286,7 +286,7 @@ public class ContractData extends Contract {
 
         public AdvanceItem(BigInteger timestamp, String contractID, byte[] appendHash,
                 String comments) {
-            super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(appendHash),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments));
+            super(new Uint256(timestamp),new Utf8String(contractID),new Bytes32(appendHash),new Utf8String(comments));
             this.timestamp = timestamp;
             this.contractID = contractID;
             this.appendHash = appendHash;
@@ -309,7 +309,7 @@ public class ContractData extends Contract {
         }
 
         public SignItem(BigInteger timestamp, String contractID, String signer) {
-            super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID),new org.fisco.bcos.sdk.v3.codec.datatypes.Address(signer));
+            super(new Uint256(timestamp),new Utf8String(contractID),new Address(signer));
             this.timestamp = timestamp;
             this.contractID = contractID;
             this.signer = signer;
@@ -331,7 +331,7 @@ public class ContractData extends Contract {
         }
 
         public ContractItem(BigInteger timestamp, String contractID, byte[] docHash) {
-            super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(contractID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(docHash));
+            super(new Uint256(timestamp),new Utf8String(contractID),new Bytes32(docHash));
             this.timestamp = timestamp;
             this.contractID = contractID;
             this.docHash = docHash;

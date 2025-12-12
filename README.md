@@ -71,3 +71,15 @@ TransactionReceipt{transactionHash='0xebc8274fd9a10289afb050b8007c990c938bdb9b5c
 </code>
 
 其中transactionHash可以作为这次事件的证据存在业务系统， status作为事件上链状态判断，0代表成功。
+
+
+## 12.12更新日志
+### 资源币支持负数余额，以及超余额转账
+
+### 更新文件
+1. resources目录下
+- abi目录全部替换
+- application.properties文件替换
+2. src/main/java/org/example/dabashou_spring_demo目录下
+- contracts目录全部替换（注意不是main/contracts目录）
+- controller目录中 ResourceCoinManagerController增加了负数测试用例，可以参考

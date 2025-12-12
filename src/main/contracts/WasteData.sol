@@ -156,7 +156,7 @@ contract WasteData {
         if(entry.fields.length != 16){
             return 0;
         }
-        oldResourceCoin = cast.stringToU256(entry.fields[11]);
+        oldResourceCoin = cast.stringToU256(entry.fields[12]);
         int256 newResourceCoin = int256(oldResourceCoin) + item.resourceCoinChange;
         UpdateField[] memory updateFields = new UpdateField[](15);
         updateFields[0] = UpdateField("timestamp", cast.u256ToString(item.timestamp));

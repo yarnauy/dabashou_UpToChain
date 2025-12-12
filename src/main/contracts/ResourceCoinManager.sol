@@ -71,7 +71,7 @@ contract ResourceCoinManager is Auth {
         emit RegisterAccount(userID, addr);
         // 新增：余额表插入
         Entry memory balanceEntry = Entry(cast.addrToString(addr), new string[](1));
-        balanceEntry.fields[0] = cast.u256ToString(0);
+        balanceEntry.fields[0] = cast.s256ToString(int256(0));
         balanceTable.insert(balanceEntry);
     }
 
@@ -93,12 +93,12 @@ contract ResourceCoinManager is Auth {
     }
 
     // 查询余额
-    function balanceOf(address addr) public view returns(uint256) {
+    function balanceOf(address addr) public view returns(int256) {
         Entry memory entry = balanceTable.select(cast.addrToString(addr));
         if(entry.fields.length == 1) {
-            return cast.stringToU256(entry.fields[0]);
+            return cast.stringToS256(entry.fields[0]);
         }
-        return 0;
+        return int256(0);
     }
 
     // 铸币（管理员）
@@ -107,13 +107,13 @@ contract ResourceCoinManager is Auth {
         if (entry.fields.length == 0) {
             // 不存在则插入
             Entry memory newEntry = Entry(cast.addrToString(item.toAddress), new string[](1));
-            newEntry.fields[0] = cast.u256ToString(0);
+            newEntry.fields[0] = cast.s256ToString(int256(0));
             balanceTable.insert(newEntry);
         }
-        uint256 oldBalance = balanceOf(item.toAddress);
-        uint256 newBalance = oldBalance + item.amount;
+        int256 oldBalance = balanceOf(item.toAddress);
+        int256 newBalance = oldBalance + int256(item.amount);
         UpdateField[] memory fields = new UpdateField[](1);
-        fields[0] = UpdateField("balance", cast.u256ToString(newBalance));
+        fields[0] = UpdateField("balance", cast.s256ToString(newBalance));
         balanceTable.update(cast.addrToString(item.toAddress), fields);
         emit IssueEvidence(item.toAddress, item.amount, item.orderID);
     }
@@ -121,16 +121,15 @@ contract ResourceCoinManager is Auth {
     // 转账存证
     function transferEvidence(TransferItem memory item) public {
         require(item.toAddress != address(0x0), "to address error");
-        uint256 fromBalance = balanceOf(item.fromAddress);
-        require(fromBalance >= item.amount, "balance not enough");
-        uint256 toBalance = balanceOf(item.toAddress);
-        // 扣减
+        int256 fromBalance = balanceOf(item.fromAddress);
+        int256 toBalance = balanceOf(item.toAddress);
+        // 扣减（允许余额变为负数）
         UpdateField[] memory fieldsFrom = new UpdateField[](1);
-        fieldsFrom[0] = UpdateField("balance", cast.u256ToString(fromBalance - item.amount));
+        fieldsFrom[0] = UpdateField("balance", cast.s256ToString(fromBalance - int256(item.amount)));
         balanceTable.update(cast.addrToString(item.fromAddress), fieldsFrom);
         // 增加
         UpdateField[] memory fieldsTo = new UpdateField[](1);
-        fieldsTo[0] = UpdateField("balance", cast.u256ToString(toBalance + item.amount));
+        fieldsTo[0] = UpdateField("balance", cast.s256ToString(toBalance + int256(item.amount)));
         balanceTable.update(cast.addrToString(item.toAddress), fieldsTo);
         emit TransferEvidence(item.fromAddress, item.toAddress, item.amount, item.orderID, item.comments);
     }
@@ -138,16 +137,16 @@ contract ResourceCoinManager is Auth {
     // 取款存证（转到指定账户）
     function withdrawEvidence(WithdrawItem memory item) public {
         require(withdrawAccount != address(0x0), "withdrawAccount not set");
-        uint256 fromBalance = balanceOf(item.userAddress);
-        require(fromBalance >= item.amount, "balance not enough");
-        uint256 toBalance = balanceOf(withdrawAccount);
+        int256 fromBalance = balanceOf(item.userAddress);
+        require(fromBalance >= int256(item.amount), "balance not enough");
+        int256 toBalance = balanceOf(withdrawAccount);
         // 扣减
         UpdateField[] memory fieldsFrom = new UpdateField[](1);
-        fieldsFrom[0] = UpdateField("balance", cast.u256ToString(fromBalance - item.amount));
+        fieldsFrom[0] = UpdateField("balance", cast.s256ToString(fromBalance - int256(item.amount)));
         balanceTable.update(cast.addrToString(item.userAddress), fieldsFrom);
         // 增加
         UpdateField[] memory fieldsTo = new UpdateField[](1);
-        fieldsTo[0] = UpdateField("balance", cast.u256ToString(toBalance + item.amount));
+        fieldsTo[0] = UpdateField("balance", cast.s256ToString(toBalance + int256(item.amount)));
         balanceTable.update(cast.addrToString(withdrawAccount), fieldsTo);
         emit WithdrawEvidence(item.userAddress, item.amount, item.orderID);
     }
