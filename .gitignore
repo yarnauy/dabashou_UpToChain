@@ -49,6 +49,8 @@ src/test/java/org/fisco/bcos/temp/*
 .classpath
 .project
 .settings/
-bin/
+# Ignore Eclipse bin output directory, but allow src/main/resources/bin/ (contract binaries)
+/bin/
+out/bin/
 
 
