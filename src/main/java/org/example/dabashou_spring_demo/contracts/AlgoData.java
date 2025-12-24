@@ -69,9 +69,9 @@ public class AlgoData extends Contract {
 
     public List<InsertAlgoEventResponse> getInsertAlgoEvents(
             TransactionReceipt transactionReceipt) {
-        List<Contract.EventValuesWithLog> valueList = extractEventParametersWithLog(INSERTALGO_EVENT, transactionReceipt);
+        List<EventValuesWithLog> valueList = extractEventParametersWithLog(INSERTALGO_EVENT, transactionReceipt);
         ArrayList<InsertAlgoEventResponse> responses = new ArrayList<InsertAlgoEventResponse>(valueList.size());
-        for (Contract.EventValuesWithLog eventValues : valueList) {
+        for (EventValuesWithLog eventValues : valueList) {
             InsertAlgoEventResponse typedResponse = new InsertAlgoEventResponse();
             typedResponse.log = eventValues.getLog();
             typedResponse.algoID = (byte[]) eventValues.getIndexedValues().get(0).getValue();
@@ -86,14 +86,14 @@ public class AlgoData extends Contract {
 
     public Boolean exist(String algo_id) throws ContractException {
         final Function function = new Function(FUNC_EXIST, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algo_id)), 
+                Arrays.<Type>asList(new Utf8String(algo_id)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         return executeCallWithSingleValueReturn(function, Boolean.class);
     }
 
     public void exist(String algo_id, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_EXIST, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algo_id)), 
+                Arrays.<Type>asList(new Utf8String(algo_id)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         asyncExecuteCall(function, callback);
     }
@@ -116,10 +116,10 @@ public class AlgoData extends Contract {
             String comments) {
         final Function function = new Function(
                 FUNC_INSERT, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algoID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(algoHash), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(algoID),
+                new Bytes32(algoHash),
+                new Utf8String(comments)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return executeTransaction(function);
     }
@@ -128,10 +128,10 @@ public class AlgoData extends Contract {
             byte[] algoHash, String comments) {
         final Function function = new Function(
                 FUNC_INSERT, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algoID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(algoHash), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(algoID),
+                new Bytes32(algoHash),
+                new Utf8String(comments)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return createSignedTransaction(function);
     }
@@ -140,10 +140,10 @@ public class AlgoData extends Contract {
             TransactionCallback callback) {
         final Function function = new Function(
                 FUNC_INSERT, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algoID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(algoHash), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(algoID),
+                new Bytes32(algoHash),
+                new Utf8String(comments)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
@@ -178,7 +178,7 @@ public class AlgoData extends Contract {
 
     public Tuple3<BigInteger, byte[], String> select(String algoID) throws ContractException {
         final Function function = new Function(FUNC_SELECT, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algoID)), 
+                Arrays.<Type>asList(new Utf8String(algoID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Utf8String>() {}));
         List<Type> results = executeCallWithMultipleValueReturn(function);
         return new Tuple3<BigInteger, byte[], String>(
@@ -189,7 +189,7 @@ public class AlgoData extends Contract {
 
     public void select(String algoID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_SELECT, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(algoID)), 
+                Arrays.<Type>asList(new Utf8String(algoID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Utf8String>() {}));
         asyncExecuteCall(function, callback);
     }

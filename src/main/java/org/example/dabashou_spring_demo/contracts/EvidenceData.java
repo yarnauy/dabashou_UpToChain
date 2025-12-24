@@ -76,9 +76,9 @@ public class EvidenceData extends Contract {
             String approver) {
         final Function function = new Function(
                 FUNC_APPROVEEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(evidenceID),
+                new Address(approver)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return executeTransaction(function);
     }
@@ -87,9 +87,9 @@ public class EvidenceData extends Contract {
             String approver) {
         final Function function = new Function(
                 FUNC_APPROVEEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(evidenceID),
+                new Address(approver)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return createSignedTransaction(function);
     }
@@ -98,9 +98,9 @@ public class EvidenceData extends Contract {
             TransactionCallback callback) {
         final Function function = new Function(
                 FUNC_APPROVEEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(evidenceID),
+                new Address(approver)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
@@ -125,15 +125,15 @@ public class EvidenceData extends Contract {
             String creator) {
         final Function function = new Function(
                 FUNC_CREATEEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(contentHash), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(mode), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.DynamicBytes(reserved1), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.DynamicArray<org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String>(
-                        org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String.class,
-                        org.fisco.bcos.sdk.v3.codec.Utils.typeMap(reserved2, org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String.class)), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(creator)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(evidenceID),
+                new Bytes32(contentHash),
+                new Uint256(mode),
+                new DynamicBytes(reserved1),
+                new DynamicArray<Utf8String>(
+                        Utf8String.class,
+                        org.fisco.bcos.sdk.v3.codec.Utils.typeMap(reserved2, Utf8String.class)),
+                new Address(creator)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return executeTransaction(function);
     }
@@ -143,15 +143,15 @@ public class EvidenceData extends Contract {
             String creator) {
         final Function function = new Function(
                 FUNC_CREATEEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(contentHash), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(mode), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.DynamicBytes(reserved1), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.DynamicArray<org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String>(
-                        org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String.class,
-                        org.fisco.bcos.sdk.v3.codec.Utils.typeMap(reserved2, org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String.class)), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(creator)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(evidenceID),
+                new Bytes32(contentHash),
+                new Uint256(mode),
+                new DynamicBytes(reserved1),
+                new DynamicArray<Utf8String>(
+                        Utf8String.class,
+                        org.fisco.bcos.sdk.v3.codec.Utils.typeMap(reserved2, Utf8String.class)),
+                new Address(creator)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return createSignedTransaction(function);
     }
@@ -161,15 +161,15 @@ public class EvidenceData extends Contract {
             TransactionCallback callback) {
         final Function function = new Function(
                 FUNC_CREATEEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(contentHash), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(mode), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.DynamicBytes(reserved1), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.DynamicArray<org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String>(
-                        org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String.class,
-                        org.fisco.bcos.sdk.v3.codec.Utils.typeMap(reserved2, org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String.class)), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(creator)), 
+                Arrays.<Type>asList(new Uint256(timestamp),
+                new Utf8String(evidenceID),
+                new Bytes32(contentHash),
+                new Uint256(mode),
+                new DynamicBytes(reserved1),
+                new DynamicArray<Utf8String>(
+                        Utf8String.class,
+                        org.fisco.bcos.sdk.v3.codec.Utils.typeMap(reserved2, Utf8String.class)),
+                new Address(creator)),
                 Collections.<TypeReference<?>>emptyList(), 0);
         return asyncExecuteTransaction(function, callback);
     }
@@ -193,24 +193,24 @@ public class EvidenceData extends Contract {
                 );
     }
 
-    public List<EvidenceData.Approval> getApprovals(String evidenceID) throws ContractException {
+    public List<Approval> getApprovals(String evidenceID) throws ContractException {
         final Function function = new Function(FUNC_GETAPPROVALS, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<EvidenceData.Approval>>() {}));
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Approval>>() {}));
         return executeCallWithSingleValueReturn(function, List.class);
     }
 
     public void getApprovals(String evidenceID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETAPPROVALS, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
-                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<EvidenceData.Approval>>() {}));
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
+                Arrays.<TypeReference<?>>asList(new TypeReference<DynamicArray<Approval>>() {}));
         asyncExecuteCall(function, callback);
     }
 
     public Tuple7<BigInteger, String, byte[], BigInteger, byte[], List<String>, String> getEvidence(
             String evidenceID) throws ContractException {
         final Function function = new Function(FUNC_GETEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Uint256>() {}, new TypeReference<DynamicBytes>() {}, new TypeReference<DynamicArray<Utf8String>>() {}, new TypeReference<Address>() {}));
         List<Type> results = executeCallWithMultipleValueReturn(function);
         return new Tuple7<BigInteger, String, byte[], BigInteger, byte[], List<String>, String>(
@@ -225,43 +225,43 @@ public class EvidenceData extends Contract {
 
     public void getEvidence(String evidenceID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}, new TypeReference<Utf8String>() {}, new TypeReference<Bytes32>() {}, new TypeReference<Uint256>() {}, new TypeReference<DynamicBytes>() {}, new TypeReference<DynamicArray<Utf8String>>() {}, new TypeReference<Address>() {}));
         asyncExecuteCall(function, callback);
     }
 
     public byte[] getHash(String evidenceID) throws ContractException {
         final Function function = new Function(FUNC_GETHASH, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>() {}));
         return executeCallWithSingleValueReturn(function, byte[].class);
     }
 
     public void getHash(String evidenceID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETHASH, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bytes32>() {}));
         asyncExecuteCall(function, callback);
     }
 
     public BigInteger getMode(String evidenceID) throws ContractException {
         final Function function = new Function(FUNC_GETMODE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         return executeCallWithSingleValueReturn(function, BigInteger.class);
     }
 
     public void getMode(String evidenceID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_GETMODE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Uint256>() {}));
         asyncExecuteCall(function, callback);
     }
 
     public Boolean isApproved(String evidenceID, String approver) throws ContractException {
         final Function function = new Function(FUNC_ISAPPROVED, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID),
+                new Address(approver)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         return executeCallWithSingleValueReturn(function, Boolean.class);
     }
@@ -269,22 +269,22 @@ public class EvidenceData extends Contract {
     public void isApproved(String evidenceID, String approver, CallCallback callback) throws
             ContractException {
         final Function function = new Function(FUNC_ISAPPROVED, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID),
+                new Address(approver)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         asyncExecuteCall(function, callback);
     }
 
     public Boolean isExist(String evidenceID) throws ContractException {
         final Function function = new Function(FUNC_ISEXIST, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         return executeCallWithSingleValueReturn(function, Boolean.class);
     }
 
     public void isExist(String evidenceID, CallCallback callback) throws ContractException {
         final Function function = new Function(FUNC_ISEXIST, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}));
         asyncExecuteCall(function, callback);
     }
@@ -292,8 +292,8 @@ public class EvidenceData extends Contract {
     public Tuple2<Boolean, String> verifyEvidence(String evidenceID, byte[] expectedHash) throws
             ContractException {
         final Function function = new Function(FUNC_VERIFYEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(expectedHash)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID),
+                new Bytes32(expectedHash)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}, new TypeReference<Utf8String>() {}));
         List<Type> results = executeCallWithMultipleValueReturn(function);
         return new Tuple2<Boolean, String>(
@@ -304,8 +304,8 @@ public class EvidenceData extends Contract {
     public void verifyEvidence(String evidenceID, byte[] expectedHash, CallCallback callback) throws
             ContractException {
         final Function function = new Function(FUNC_VERIFYEVIDENCE, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID), 
-                new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Bytes32(expectedHash)), 
+                Arrays.<Type>asList(new Utf8String(evidenceID),
+                new Bytes32(expectedHash)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<Bool>() {}, new TypeReference<Utf8String>() {}));
         asyncExecuteCall(function, callback);
     }
@@ -335,7 +335,7 @@ public class EvidenceData extends Contract {
         }
 
         public Approval(BigInteger timestamp, String evidenceID, String approver) {
-            super(new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(evidenceID),new org.fisco.bcos.sdk.v3.codec.datatypes.Address(approver));
+            super(new Uint256(timestamp),new Utf8String(evidenceID),new Address(approver));
             this.timestamp = timestamp;
             this.evidenceID = evidenceID;
             this.approver = approver;

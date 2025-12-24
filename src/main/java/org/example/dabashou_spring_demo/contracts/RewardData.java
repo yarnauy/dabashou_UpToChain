@@ -63,7 +63,7 @@ public class RewardData extends Contract {
 
     public DisposeRewardItem getDisposeRewardByOrderID(String orderID) throws ContractException {
         final Function function = new Function(FUNC_GETDISPOSEREWARDBYORDERID, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID)), 
+                Arrays.<Type>asList(new Utf8String(orderID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<DisposeRewardItem>() {}));
         return executeCallWithSingleValueReturn(function, DisposeRewardItem.class);
     }
@@ -71,7 +71,7 @@ public class RewardData extends Contract {
     public void getDisposeRewardByOrderID(String orderID, CallCallback callback) throws
             ContractException {
         final Function function = new Function(FUNC_GETDISPOSEREWARDBYORDERID, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID)), 
+                Arrays.<Type>asList(new Utf8String(orderID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<DisposeRewardItem>() {}));
         asyncExecuteCall(function, callback);
     }
@@ -92,7 +92,7 @@ public class RewardData extends Contract {
 
     public PropertyRewardItem getPropertyRewardByOrderID(String orderID) throws ContractException {
         final Function function = new Function(FUNC_GETPROPERTYREWARDBYORDERID, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID)), 
+                Arrays.<Type>asList(new Utf8String(orderID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<PropertyRewardItem>() {}));
         return executeCallWithSingleValueReturn(function, PropertyRewardItem.class);
     }
@@ -100,7 +100,7 @@ public class RewardData extends Contract {
     public void getPropertyRewardByOrderID(String orderID, CallCallback callback) throws
             ContractException {
         final Function function = new Function(FUNC_GETPROPERTYREWARDBYORDERID, 
-                Arrays.<Type>asList(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID)), 
+                Arrays.<Type>asList(new Utf8String(orderID)),
                 Arrays.<TypeReference<?>>asList(new TypeReference<PropertyRewardItem>() {}));
         asyncExecuteCall(function, callback);
     }
@@ -263,7 +263,7 @@ public class RewardData extends Contract {
         public DisposeRewardItem(String timestamp, String orderID, String category,
                 BigInteger amount, BigInteger price, BigInteger accruedReward,
                 BigInteger deductedReward, BigInteger actualReward, String comments) {
-            super(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(category),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(amount),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(price),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(accruedReward),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(deductedReward),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(actualReward),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments));
+            super(new Utf8String(timestamp),new Utf8String(orderID),new Utf8String(category),new Uint256(amount),new Uint256(price),new Uint256(accruedReward),new Uint256(deductedReward),new Uint256(actualReward),new Utf8String(comments));
             this.timestamp = timestamp;
             this.orderID = orderID;
             this.category = category;
@@ -313,7 +313,7 @@ public class RewardData extends Contract {
         public PropertyRewardItem(String timestamp, String orderID, String courtID,
                 BigInteger houseHoldNum, BigInteger score, BigInteger unit, BigInteger ratio,
                 BigInteger amount, String comments) {
-            super(new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(timestamp),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(orderID),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(courtID),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(houseHoldNum),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(score),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(unit),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(ratio),new org.fisco.bcos.sdk.v3.codec.datatypes.generated.Uint256(amount),new org.fisco.bcos.sdk.v3.codec.datatypes.Utf8String(comments));
+            super(new Utf8String(timestamp),new Utf8String(orderID),new Utf8String(courtID),new Uint256(houseHoldNum),new Uint256(score),new Uint256(unit),new Uint256(ratio),new Uint256(amount),new Utf8String(comments));
             this.timestamp = timestamp;
             this.orderID = orderID;
             this.courtID = courtID;

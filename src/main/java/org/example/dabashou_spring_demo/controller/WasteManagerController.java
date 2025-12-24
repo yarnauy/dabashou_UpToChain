@@ -174,7 +174,7 @@ public class WasteManagerController {
      */
     @GetMapping("getDisposeRewardByOrderID")
     public DisposeRewardItem getDisposeRewardByOrderID() throws Exception {
-        String orderID = "order125";
+        String orderID = "RB20251208091249-349";
         WasteManagerGetDisposeRewardByOrderIDInputBO input = new WasteManagerGetDisposeRewardByOrderIDInputBO(orderID);
         return service.getDisposeRewardByOrderID(input);
     }

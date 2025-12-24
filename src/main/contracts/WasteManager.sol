@@ -101,8 +101,8 @@ contract WasteManager is Auth{
     function settle(uint256 timestamp, string memory targerOrderID, string memory orderID, address toAddress, uint256 amount) public auth {
         require(toAddress != address(0x0), "toAddress is zero");
         require(amount > 0, "amount must be positive");
-        uint256 rewardBalance = _resouceCoin.balanceOf(rewardAccount);
-        require(rewardBalance >= amount, "reward account balance not enough");
+        int256 rewardBalance = _resouceCoin.balanceOf(rewardAccount);
+        require(rewardBalance >= int256(amount), "reward account balance not enough");
         // 构造TransferItem结构体
         ResourceCoinManager.TransferItem memory item = ResourceCoinManager.TransferItem({
             orderID: orderID,

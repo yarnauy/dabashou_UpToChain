@@ -5,14 +5,14 @@
 
 ### 调用方式可以参考Controller目录下的示例
 
-### 生产链信息
+### 测试链信息
 
 - 节点数：4
 - rpc addr:
-    - 124.70.133.121:20200
-    - 121.36.207.5:20200
-    - 124.71.155.41:20200
-    - 113.44.8.90:20200
+  - 123.60.185.16:20200
+  - 123.60.185.16:20201
+  - 123.60.185.16:20202
+  - 123.60.185.16:20203
 
 
 ### 客户端信息
@@ -73,9 +73,13 @@ TransactionReceipt{transactionHash='0xebc8274fd9a10289afb050b8007c990c938bdb9b5c
 其中transactionHash可以作为这次事件的证据存在业务系统， status作为事件上链状态判断，0代表成功。
 
 
-## 测试链转正式链的配置更新过程 2025.12.1
-1. 更新src/main/resources/conf/下面的全部文件
-2. 更新src/main/resources/application.properties
+## 12.12更新日志
+### 资源币支持负数余额，以及超余额转账
 
-3. 注：此次更新修复了一个问题，更新了一个文件src/main/java/org/example/dabashou_spring_demo/model/bo/ContractResponse.java
-区块链浏览器：http://124.71.155.41:5000/#/home 
+### 更新文件
+1. resources目录下
+- abi目录全部替换
+- application.properties文件替换
+2. src/main/java/org/example/dabashou_spring_demo目录下
+- contracts目录全部替换（注意不是main/contracts目录）
+- controller目录中 ResourceCoinManagerController增加了负数测试用例，可以参考
