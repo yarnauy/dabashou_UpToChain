@@ -95,6 +95,7 @@ TransactionReceipt{transactionHash='0xebc8274fd9a10289afb050b8007c990c938bdb9b5c
 
 1. resources目录下
 - abi目录全部替换
+- bin目录全部替换
 - application.properties文件替换
 2. src/main/java/org/example/dabashou_spring_demo目录下
 - contracts目录全部替换（注意不是main/contracts目录）
