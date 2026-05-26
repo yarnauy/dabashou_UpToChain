@@ -31,7 +31,7 @@ public class ResourceCoinManagerController {
 
     @GetMapping("balanceOf")
     public java.math.BigInteger balanceOf() throws Exception {
-        ResourceCoinManagerBalanceOfInputBO input = new ResourceCoinManagerBalanceOfInputBO("0x0000000000000000000000000000000000000001");
+        ResourceCoinManagerBalanceOfInputBO input = new ResourceCoinManagerBalanceOfInputBO("0x1c7fa1c2858dec136f4951a9f4d4e9c95afe5025");
         return service.balanceOf(input);
     }
 

@@ -7,8 +7,10 @@ import javax.annotation.PostConstruct;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dabashou_spring_demo.constants.ContractConstants;
+import org.example.dabashou_spring_demo.model.bo.RewardDataGetActivityRewardByOrderIDInputBO;
 import org.example.dabashou_spring_demo.model.bo.RewardDataGetDisposeRewardByOrderIDInputBO;
 import org.example.dabashou_spring_demo.model.bo.RewardDataGetPropertyRewardByOrderIDInputBO;
+import org.example.dabashou_spring_demo.model.bo.RewardDataInsertActivityRewardInputBO;
 import org.example.dabashou_spring_demo.model.bo.RewardDataInsertDisposeRewardInputBO;
 import org.example.dabashou_spring_demo.model.bo.RewardDataInsertPropertyRewardInputBO;
 import org.fisco.bcos.sdk.v3.client.Client;
@@ -46,8 +48,17 @@ public class RewardDataService {
     return this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.RewardDataAbi, "getPropertyRewardByOrderID", input.toArgs());
   }
 
+  public CallResponse getActivityRewardTable() throws Exception {
+    return this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.RewardDataAbi, "getActivityRewardTable", Arrays.asList());
+  }
+
   public CallResponse getDisposeRewardTable() throws Exception {
     return this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.RewardDataAbi, "getDisposeRewardTable", Arrays.asList());
+  }
+
+  public TransactionResponse insertActivityReward(RewardDataInsertActivityRewardInputBO input)
+      throws Exception {
+    return this.txProcessor.sendTransactionAndGetResponse(this.address, ContractConstants.RewardDataAbi, "insertActivityReward", input.toArgs());
   }
 
   public TransactionResponse insertDisposeReward(RewardDataInsertDisposeRewardInputBO input) throws
@@ -58,6 +69,11 @@ public class RewardDataService {
   public TransactionResponse insertPropertyReward(RewardDataInsertPropertyRewardInputBO input)
       throws Exception {
     return this.txProcessor.sendTransactionAndGetResponse(this.address, ContractConstants.RewardDataAbi, "insertPropertyReward", input.toArgs());
+  }
+
+  public CallResponse getActivityRewardByOrderID(RewardDataGetActivityRewardByOrderIDInputBO input)
+      throws Exception {
+    return this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.RewardDataAbi, "getActivityRewardByOrderID", input.toArgs());
   }
 
   public CallResponse getDisposeRewardByOrderID(RewardDataGetDisposeRewardByOrderIDInputBO input)

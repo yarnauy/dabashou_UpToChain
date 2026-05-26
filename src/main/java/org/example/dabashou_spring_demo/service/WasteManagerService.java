@@ -7,10 +7,12 @@ import javax.annotation.PostConstruct;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.example.dabashou_spring_demo.constants.ContractConstants;
+import org.example.dabashou_spring_demo.model.bo.WasteManagerActivityRewardInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerAllowInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerDenyInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerDisposeInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerDisposeRewardInputBO;
+import org.example.dabashou_spring_demo.model.bo.WasteManagerGetActivityRewardByOrderIDInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerGetDisposeInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerGetDisposeRewardByOrderIDInputBO;
 import org.example.dabashou_spring_demo.model.bo.WasteManagerGetPropertyRewardByOrderIDInputBO;
@@ -123,6 +125,11 @@ public class WasteManagerService {
     return this.txProcessor.sendTransactionAndGetResponse(this.address, ContractConstants.WasteManagerAbi, "deny", input.toArgs());
   }
 
+  public TransactionResponse activityReward(WasteManagerActivityRewardInputBO input) throws
+      Exception {
+    return this.txProcessor.sendTransactionAndGetResponse(this.address, ContractConstants.WasteManagerAbi, "activityReward", input.toArgs());
+  }
+
   public TransactionResponse settle(WasteManagerSettleInputBO input) throws Exception {
     return this.txProcessor.sendTransactionAndGetResponse(this.address, ContractConstants.WasteManagerAbi, "settle", input.toArgs());
   }
@@ -225,6 +232,27 @@ public class WasteManagerService {
     }
     
     // 否则返回null
+    return null;
+  }
+
+  public org.example.dabashou_spring_demo.model.bo.ActivityRewardItem getActivityRewardByOrderID(
+      WasteManagerGetActivityRewardByOrderIDInputBO input) throws Exception {
+    Object result = this.txProcessor.sendCall(this.client.getCryptoSuite().getCryptoKeyPair().getAddress(), this.address, ContractConstants.WasteManagerAbi, "getActivityRewardByOrderID", input.toArgs()).getReturnObject();
+
+    if (result instanceof java.util.ArrayList) {
+      java.util.ArrayList<?> resultList = (java.util.ArrayList<?>) result;
+      if (!resultList.isEmpty()) {
+        Object firstElement = resultList.get(0);
+        if (firstElement instanceof java.util.ArrayList) {
+          return org.example.dabashou_spring_demo.model.bo.ActivityRewardItem.fromArrayList(
+              (java.util.ArrayList<?>) firstElement);
+        } else if (firstElement instanceof org.example.dabashou_spring_demo.model.bo.ActivityRewardItem) {
+          return (org.example.dabashou_spring_demo.model.bo.ActivityRewardItem) firstElement;
+        }
+      }
+    } else if (result instanceof org.example.dabashou_spring_demo.model.bo.ActivityRewardItem) {
+      return (org.example.dabashou_spring_demo.model.bo.ActivityRewardItem) result;
+    }
     return null;
   }
 
