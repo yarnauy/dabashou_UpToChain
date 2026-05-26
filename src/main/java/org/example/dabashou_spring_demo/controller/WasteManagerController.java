@@ -7,7 +7,8 @@ import org.example.dabashou_spring_demo.model.bo.*;
 import org.example.dabashou_spring_demo.model.bo.DisposeRewardItem;
 import org.example.dabashou_spring_demo.model.bo.PropertyRewardItem;
 import org.example.dabashou_spring_demo.service.WasteManagerService;
-import org.fisco.bcos.sdk.v3.codec.datatypes.generated.tuples.generated.Tuple3;
+import org.fisco.bcos.sdk.v3.model.TransactionReceipt;
+import org.fisco.bcos.sdk.v3.transaction.model.dto.TransactionResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -190,6 +191,31 @@ public class WasteManagerController {
     }
 
     /**
+     * 活动奖励上链（示范）
+     */
+    @GetMapping("activityReward")
+    public String activityReward() throws Exception {
+        BigInteger timestamp = BigInteger.valueOf(1719805000);
+        String orderID = "activity_order_001";
+        String userID = "user113";
+        String activityID = "spring_campaign_2026";
+        BigInteger resourceCoin = BigInteger.valueOf(100);
+        ActivityRewardItem item = new ActivityRewardItem(timestamp, orderID, userID, activityID, resourceCoin);
+        WasteManagerActivityRewardInputBO input = new WasteManagerActivityRewardInputBO(item);
+        return service.activityReward(input).getTransactionReceipt().toString();
+    }
+
+    /**
+     * 按 orderID 查询活动奖励（示范）
+     */
+    @GetMapping("getActivityRewardByOrderID")
+    public ActivityRewardItem getActivityRewardByOrderID() throws Exception {
+        String orderID = "activity_order_001";
+        WasteManagerGetActivityRewardByOrderIDInputBO input = new WasteManagerGetActivityRewardByOrderIDInputBO(orderID);
+        return service.getActivityRewardByOrderID(input);
+    }
+
+    /**
      * 测试用例：连续调用两次dispose，使用相同的orderID但不同的其他数据
      * 然后查询getDispose，查看返回的是哪一条记录
      */
@@ -302,130 +328,269 @@ public class WasteManagerController {
     @Autowired
     private org.example.dabashou_spring_demo.service.ResourceCoinManagerService resourceCoinService;
 
+
+
     /**
-     * 测试用例：使用相同的orderID多次调用settle，检测是否会重复转账
-     * 用于测试重入保护机制
+     * 测试 dispose 使用负数 resourceCoin（int256），并查询链上记录
      */
-    @GetMapping("testSettleDuplicateOrderID")
-    public String testSettleDuplicateOrderID() throws Exception {
+    @GetMapping("testDisposeNegativeResourceCoin")
+    public String testDisposeNegativeResourceCoin() throws Exception {
         StringBuilder result = new StringBuilder();
-        result.append("=== 测试相同orderID的多次settle调用（重入检测） ===\n\n");
-        
-        // 使用相同的orderID
-        String testOrderID = "test_settle_order_002";
-        String targerOrderID = "target_order_001";
-        String toAddress = "0x0000000000000000000000000000000000000101"; // 接收地址
-        BigInteger amount = BigInteger.valueOf(100); // 转账金额
-        
-        // 查询接收地址的初始余额
-        result.append("【初始状态】\n");
-        org.example.dabashou_spring_demo.model.bo.ResourceCoinManagerBalanceOfInputBO balanceInput = 
-            new org.example.dabashou_spring_demo.model.bo.ResourceCoinManagerBalanceOfInputBO(toAddress);
-        java.math.BigInteger initialBalance = resourceCoinService.balanceOf(balanceInput);
-        result.append("接收地址: ").append(toAddress).append("\n");
-        result.append("初始余额: ").append(initialBalance).append("\n");
-        result.append("orderID: ").append(testOrderID).append("\n");
-        result.append("转账金额: ").append(amount).append("\n\n");
-        
-        // 第一次settle调用
-        result.append("【第一次settle调用】\n");
-        BigInteger timestamp1 = BigInteger.valueOf(System.currentTimeMillis() / 1000);
-        WasteManagerSettleInputBO input1 = new WasteManagerSettleInputBO(timestamp1, targerOrderID, testOrderID, toAddress, amount);
-        
-        String txHash1 = null;
-        boolean firstCallSuccess = false;
-        Integer firstCallStatus = null;
-        try {
-            org.fisco.bcos.sdk.v3.model.TransactionReceipt receipt1 = service.settle(input1).getTransactionReceipt();
-            txHash1 = receipt1.getTransactionHash();
-            firstCallStatus = receipt1.getStatus();
-            // status == 0 表示成功
-            firstCallSuccess = (firstCallStatus != null && firstCallStatus == 0);
-            result.append("交易哈希: ").append(txHash1).append("\n");
-            result.append("交易状态码: ").append(firstCallStatus).append("\n");
-            result.append("调用状态: ").append(firstCallSuccess ? "成功" : "失败").append("\n");
-            if (!firstCallSuccess) {
-                result.append("错误信息: ").append(receipt1.getMessage() != null ? receipt1.getMessage() : "交易执行失败").append("\n");
-            }
-        } catch (Exception e) {
-            result.append("调用异常: ").append(e.getMessage()).append("\n");
-            result.append("调用状态: 异常\n");
-        }
-        
-        // 等待一下，确保交易已上链
+        result.append("=== 测试 dispose 负数 resourceCoin ===\n\n");
+
+        String testOrderID = "test_negative_rc_" + (System.currentTimeMillis() % 100000);
+        byte[] imagesHash = new byte[32];
+        byte[] creditParamsHash = new byte[32];
+        BigInteger resourceCoin = BigInteger.valueOf(-88);
+
+        DisposeItem item = new DisposeItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                testOrderID,
+                "user_neg",
+                "device_neg",
+                "bin_neg",
+                "court_neg",
+                imagesHash,
+                creditParamsHash,
+                BigInteger.valueOf(100),
+                BigInteger.valueOf(50),
+                "干垃圾",
+                BigInteger.valueOf(500),
+                BigInteger.valueOf(60),
+                resourceCoin,
+                "0x0000000000000000000000000000000000000001");
+        result.append(formatTxResult(service.dispose(new WasteManagerDisposeInputBO(item)))).append("\n\n");
+
         Thread.sleep(1000);
-        
-        // 查询第一次调用后的余额
-        java.math.BigInteger balanceAfterFirst = resourceCoinService.balanceOf(balanceInput);
-        result.append("第一次调用后余额: ").append(balanceAfterFirst).append("\n");
-        java.math.BigInteger balanceChange1 = balanceAfterFirst.subtract(initialBalance);
-        result.append("余额变化: ").append(balanceChange1).append("\n\n");
-        
-        // 第二次settle调用 - 相同的orderID
-        result.append("【第二次settle调用】（相同orderID）\n");
-        BigInteger timestamp2 = BigInteger.valueOf(System.currentTimeMillis() / 1000);
-        WasteManagerSettleInputBO input2 = new WasteManagerSettleInputBO(timestamp2, targerOrderID, testOrderID, toAddress, amount);
-        
-        String txHash2 = null;
-        boolean secondCallSuccess = false;
-        Integer secondCallStatus = null;
-        try {
-            org.fisco.bcos.sdk.v3.model.TransactionReceipt receipt2 = service.settle(input2).getTransactionReceipt();
-            txHash2 = receipt2.getTransactionHash();
-            secondCallStatus = receipt2.getStatus();
-            // status == 0 表示成功
-            secondCallSuccess = (secondCallStatus != null && secondCallStatus == 0);
-            result.append("交易哈希: ").append(txHash2).append("\n");
-            result.append("交易状态码: ").append(secondCallStatus).append("\n");
-            result.append("调用状态: ").append(secondCallSuccess ? "成功" : "失败（可能被重入保护拦截）").append("\n");
-            if (!secondCallSuccess) {
-                result.append("错误信息: ").append(receipt2.getMessage() != null ? receipt2.getMessage() : "交易执行失败").append("\n");
-            }
-        } catch (Exception e) {
-            result.append("调用异常: ").append(e.getMessage()).append("\n");
-            result.append("调用状态: 异常\n");
-        }
-        
-        // 等待一下，确保交易已上链（如果成功）
-        Thread.sleep(1000);
-        
-        // 查询第二次调用后的余额
-        java.math.BigInteger balanceAfterSecond = resourceCoinService.balanceOf(balanceInput);
-        result.append("第二次调用后余额: ").append(balanceAfterSecond).append("\n");
-        java.math.BigInteger balanceChange2 = balanceAfterSecond.subtract(balanceAfterFirst);
-        result.append("第二次余额变化: ").append(balanceChange2).append("\n");
-        java.math.BigInteger totalBalanceChange = balanceAfterSecond.subtract(initialBalance);
-        result.append("总余额变化: ").append(totalBalanceChange).append("\n\n");
-        
-        // 分析结果
-        result.append("【测试结果分析】\n");
-        if (!firstCallSuccess) {
-            result.append("✗ 第一次调用失败（status=").append(firstCallStatus).append("），无法进行重入测试\n");
-        } else if (!secondCallSuccess) {
-            result.append("✓ 重入保护生效！\n");
-            result.append("  - 第一次调用成功（status=0），余额增加: ").append(balanceChange1).append("\n");
-            result.append("  - 第二次调用失败（status=").append(secondCallStatus).append("），余额未变化: ").append(balanceChange2).append("\n");
-            result.append("  - 总余额变化: ").append(totalBalanceChange).append("（应该等于一次转账金额）\n");
-            if (totalBalanceChange.equals(amount)) {
-                result.append("✓ 验证通过：只转账了一次，重入保护正常工作\n");
-            } else {
-                result.append("⚠ 警告：余额变化不符合预期\n");
-            }
+
+        DisposeItem onChain = service.getDispose(new WasteManagerGetDisposeInputBO(testOrderID));
+        result.append("【链上查询】orderID=").append(testOrderID).append("\n");
+        if (onChain == null) {
+            result.append("未查到记录\n");
         } else {
-            // 两次都成功
-            result.append("⚠ 重入保护可能未生效！\n");
-            result.append("  - 第一次调用成功（status=0），余额增加: ").append(balanceChange1).append("\n");
-            result.append("  - 第二次调用也成功（status=0），余额增加: ").append(balanceChange2).append("\n");
-            result.append("  - 总余额变化: ").append(totalBalanceChange).append("\n");
-            if (totalBalanceChange.equals(amount.multiply(BigInteger.valueOf(2)))) {
-                result.append("✗ 验证失败：转账了两次，可能存在重入漏洞\n");
+            result.append("resourceCoin=").append(onChain.resourceCoin).append("\n");
+            if (resourceCoin.equals(onChain.resourceCoin)) {
+                result.append("【结论】负数 resourceCoin 写入成功\n");
             } else {
-                result.append("⚠ 余额变化不符合预期，需要进一步检查\n");
+                result.append("【结论】链上 resourceCoin 与预期不符\n");
             }
         }
-        
         return result.toString();
     }
 
+    /**
+     * 测试 dispose 幂等：相同 orderID 第二次调用成功但不改链上数据
+     */
+    @GetMapping("testDisposeIdempotent")
+    public String testDisposeIdempotent() throws Exception {
+        StringBuilder result = new StringBuilder();
+        result.append("=== 测试 dispose 幂等 ===\n\n");
+
+        String testOrderID = "test_dispose_idem_" + (System.currentTimeMillis() % 100000);
+        byte[] imagesHash = new byte[32];
+        byte[] creditParamsHash = new byte[32];
+
+        DisposeItem item1 = new DisposeItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                testOrderID,
+                "user_first",
+                "device_first",
+                "bin_first",
+                "court_first",
+                imagesHash,
+                creditParamsHash,
+                BigInteger.valueOf(100),
+                BigInteger.valueOf(50),
+                "干垃圾",
+                BigInteger.valueOf(1000),
+                BigInteger.valueOf(80),
+                BigInteger.valueOf(200),
+                "0x0000000000000000000000000000000000000001");
+        result.append("【第一次】\n").append(formatTxResult(service.dispose(new WasteManagerDisposeInputBO(item1)))).append("\n\n");
+
+        Thread.sleep(1000);
+
+        DisposeItem item2 = new DisposeItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                testOrderID,
+                "user_second",
+                "device_second",
+                "bin_second",
+                "court_second",
+                imagesHash,
+                creditParamsHash,
+                BigInteger.valueOf(999),
+                BigInteger.valueOf(999),
+                "湿垃圾",
+                BigInteger.valueOf(9999),
+                BigInteger.valueOf(99),
+                BigInteger.valueOf(-50),
+                "0x0000000000000000000000000000000000000002");
+        result.append("【第二次 相同orderID】\n").append(formatTxResult(service.dispose(new WasteManagerDisposeInputBO(item2)))).append("\n\n");
+
+        Thread.sleep(1000);
+
+        DisposeItem onChain = service.getDispose(new WasteManagerGetDisposeInputBO(testOrderID));
+        result.append("【链上】userID=").append(onChain != null ? onChain.userID : "null");
+        result.append(", resourceCoin=").append(onChain != null ? onChain.resourceCoin : "null").append("\n");
+        if (onChain != null && "user_first".equals(onChain.userID) && onChain.resourceCoin.equals(BigInteger.valueOf(200))) {
+            result.append("【结论】幂等生效\n");
+        } else {
+            result.append("【结论】请检查合约或 orderID 冲突\n");
+        }
+        return result.toString();
+    }
+
+    /**
+     * 测试 update / disposeReward / propertyReward 幂等
+     */
+    @GetMapping("testRewardIdempotent")
+    public String testRewardIdempotent() throws Exception {
+        StringBuilder result = new StringBuilder();
+        result.append("=== 测试 update / disposeReward / propertyReward 幂等 ===\n\n");
+        byte[] imagesHash = new byte[32];
+        byte[] creditParamsHash = new byte[32];
+
+        String updateOrderID = "test_update_idem_" + (System.currentTimeMillis() % 100000);
+        UpdateItem update1 = new UpdateItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                "order126",
+                updateOrderID,
+                "user_u1",
+                "device_u1",
+                "bin_u1",
+                "court_u1",
+                imagesHash,
+                creditParamsHash,
+                BigInteger.valueOf(100),
+                BigInteger.valueOf(50),
+                "干垃圾",
+                BigInteger.valueOf(500),
+                BigInteger.valueOf(60),
+                BigInteger.valueOf(10),
+                "第一次更新");
+        result.append("【update 第一次】\n").append(formatTxResult(service.update(new WasteManagerUpdateInputBO(update1)))).append("\n");
+        UpdateItem update2 = new UpdateItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                "order126",
+                updateOrderID,
+                "user_u2",
+                "device_u2",
+                "bin_u2",
+                "court_u2",
+                imagesHash,
+                creditParamsHash,
+                BigInteger.valueOf(999),
+                BigInteger.valueOf(999),
+                "湿垃圾",
+                BigInteger.valueOf(999),
+                BigInteger.valueOf(99),
+                BigInteger.valueOf(-99),
+                "第二次更新");
+        result.append("【update 第二次 相同orderID】\n").append(formatTxResult(service.update(new WasteManagerUpdateInputBO(update2)))).append("\n\n");
+
+        Thread.sleep(1000);
+
+        String disposeRewardOrderID = "test_dr_idem_" + (System.currentTimeMillis() % 100000);
+        DisposeRewardItem dr1 = new DisposeRewardItem("20260101", disposeRewardOrderID, "干垃圾",
+                BigInteger.valueOf(10), BigInteger.valueOf(2), BigInteger.valueOf(20),
+                BigInteger.valueOf(1), BigInteger.valueOf(19), "第一次");
+        result.append("【disposeReward 第一次】\n").append(formatTxResult(service.disposeReward(new WasteManagerDisposeRewardInputBO(dr1)))).append("\n");
+        DisposeRewardItem dr2 = new DisposeRewardItem("20260102", disposeRewardOrderID, "湿垃圾",
+                BigInteger.valueOf(99), BigInteger.valueOf(99), BigInteger.valueOf(99),
+                BigInteger.valueOf(99), BigInteger.valueOf(99), "第二次");
+        result.append("【disposeReward 第二次】\n").append(formatTxResult(service.disposeReward(new WasteManagerDisposeRewardInputBO(dr2)))).append("\n\n");
+
+        Thread.sleep(1000);
+
+        String propertyOrderID = "test_pr_idem_" + (System.currentTimeMillis() % 100000);
+        PropertyRewardItem pr1 = new PropertyRewardItem("20260101", propertyOrderID, "court_a",
+                BigInteger.valueOf(10), BigInteger.valueOf(80), BigInteger.valueOf(1),
+                BigInteger.valueOf(10), BigInteger.valueOf(100), "第一次");
+        result.append("【propertyReward 第一次】\n").append(formatTxResult(service.propertyReward(new WasteManagerPropertyRewardInputBO(pr1)))).append("\n");
+        PropertyRewardItem pr2 = new PropertyRewardItem("20260102", propertyOrderID, "court_b",
+                BigInteger.valueOf(99), BigInteger.valueOf(99), BigInteger.valueOf(99),
+                BigInteger.valueOf(99), BigInteger.valueOf(9999), "第二次");
+        result.append("【propertyReward 第二次】\n").append(formatTxResult(service.propertyReward(new WasteManagerPropertyRewardInputBO(pr2)))).append("\n");
+
+        result.append("\n第二次调用若 returnValue=0 且 idempotent=true 表示幂等命中\n");
+        return result.toString();
+    }
+
+    /**
+     * 测试活动奖励上链、查询、幂等重复调用
+     */
+    @GetMapping("testActivityReward")
+    public String testActivityReward() throws Exception {
+        StringBuilder result = new StringBuilder();
+        result.append("=== 测试 activityReward ===\n\n");
+
+        String orderID = "test_activity_" + (System.currentTimeMillis() % 100000);
+        ActivityRewardItem item1 = new ActivityRewardItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                orderID,
+                "user_act",
+                "campaign_test",
+                BigInteger.valueOf(150));
+        result.append("【第一次上链】\n").append(formatTxResult(service.activityReward(new WasteManagerActivityRewardInputBO(item1)))).append("\n\n");
+
+        Thread.sleep(1000);
+
+        ActivityRewardItem item2 = new ActivityRewardItem(
+                BigInteger.valueOf(System.currentTimeMillis() / 1000),
+                orderID,
+                "user_act_other",
+                "campaign_other",
+                BigInteger.valueOf(-30));
+        result.append("【第二次 相同orderID】\n").append(formatTxResult(service.activityReward(new WasteManagerActivityRewardInputBO(item2)))).append("\n\n");
+
+        Thread.sleep(1000);
+
+        ActivityRewardItem onChain = service.getActivityRewardByOrderID(new WasteManagerGetActivityRewardByOrderIDInputBO(orderID));
+        result.append("【查询】\n");
+        if (onChain == null) {
+            result.append("未查到记录\n");
+        } else {
+            result.append("userID=").append(onChain.userID)
+                    .append(", activityID=").append(onChain.activityID)
+                    .append(", resourceCoin=").append(onChain.resourceCoin).append("\n");
+            if ("user_act".equals(onChain.userID) && onChain.resourceCoin.equals(BigInteger.valueOf(150))) {
+                result.append("【结论】活动奖励幂等生效\n");
+            } else {
+                result.append("【结论】链上数据与第一次不一致\n");
+            }
+        }
+        return result.toString();
+    }
+
+    private String formatTxResult(TransactionResponse response) {
+        TransactionReceipt receipt = response.getTransactionReceipt();
+        StringBuilder sb = new StringBuilder();
+        sb.append(receipt.toString());
+        Object returnValue = response.getReturnObject();
+        if (returnValue != null) {
+            sb.append("\nreturnValue=").append(returnValue);
+            if (isIdempotentReturn(returnValue)) {
+                sb.append("\nidempotent=true (duplicate orderID, state unchanged)");
+            } else {
+                sb.append("\nidempotent=false (new record written)");
+            }
+        }
+        return sb.toString();
+    }
+
+    private boolean isIdempotentReturn(Object returnValue) {
+        if (returnValue instanceof BigInteger) {
+            return BigInteger.ZERO.equals(returnValue);
+        }
+        if (returnValue instanceof Number) {
+            return ((Number) returnValue).longValue() == 0L;
+        }
+        if (returnValue instanceof java.util.List) {
+            java.util.List<?> list = (java.util.List<?>) returnValue;
+            return !list.isEmpty() && isIdempotentReturn(list.get(0));
+        }
+        return "0".equals(String.valueOf(returnValue));
+    }
 
 }

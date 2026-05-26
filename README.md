@@ -83,3 +83,31 @@ TransactionReceipt{transactionHash='0xebc8274fd9a10289afb050b8007c990c938bdb9b5c
 2. src/main/java/org/example/dabashou_spring_demo目录下
 - contracts目录全部替换（注意不是main/contracts目录）
 - controller目录中 ResourceCoinManagerController增加了负数测试用例，可以参考
+
+## 26.05.27更新日志
+
+
+1. `dispose` / `update` / `disposeReward` / `propertyReward` 支持相同 orderID 幂等；
+2. `dispose` 的 `resourceCoin` 支持正负（int256）；
+3. 新增活动奖励 `activityReward`。
+
+### 需从同步更新的目录/文件
+
+1. resources目录下
+- abi目录全部替换
+- application.properties文件替换
+2. src/main/java/org/example/dabashou_spring_demo目录下
+- contracts目录全部替换（注意不是main/contracts目录）
+- service目录全部替换
+- model目录全部替换
+
+### 新增活动奖励接口
+
+参考 WasteManagerController下
+activityReward() 和 getActivityRewardByOrderID() 方法
+- `GET /wastemanager/activityReward` — 活动奖励上链
+- `GET /wastemanager/getActivityRewardByOrderID` — 查询活动奖励
+
+
+
+

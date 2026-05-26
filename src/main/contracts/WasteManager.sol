@@ -75,9 +75,8 @@ contract WasteManager is Auth{
     }
 
     function update(WasteData.UpdateItem memory item) public auth returns(int32 res){
-        //TODO require exist
-        uint256 old = _wasteData.update(item);
-        
+        //TODO: check old
+        int256 old = _wasteData.update(item);
         return 0;
     }
 
@@ -125,6 +124,10 @@ contract WasteManager is Auth{
         return _rewardData.insertPropertyReward(item);
     }
 
+    function activityReward(RewardData.ActivityRewardItem memory item) public auth returns(int32) {
+        return _rewardData.insertActivityReward(item);
+    }
+
     // 查询指定orderID的投放记录
     function getDispose(string memory orderID) public view returns (WasteData.DisposeItem memory) {
         return _wasteData.selectDisposeByOrderID(orderID);
@@ -152,6 +155,10 @@ contract WasteManager is Auth{
     // 按orderID查询PropertyRewardItem
     function getPropertyRewardByOrderID(string memory orderID) public view returns (RewardData.PropertyRewardItem memory) {
         return _rewardData.getPropertyRewardByOrderID(orderID);
+    }
+    // 按orderID查询ActivityRewardItem
+    function getActivityRewardByOrderID(string memory orderID) public view returns (RewardData.ActivityRewardItem memory) {
+        return _rewardData.getActivityRewardByOrderID(orderID);
     }
 
 }

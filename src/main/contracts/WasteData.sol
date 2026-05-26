@@ -30,7 +30,7 @@ contract WasteData {
         string  wasteType;
         uint256 quantity;
         uint256 score;
-        uint256 resourceCoin;
+        int256 resourceCoin;
         address receiverAddress;
     }
 
@@ -120,6 +120,10 @@ contract WasteData {
 
     function insert(DisposeItem memory item)
     public returns(int32){
+        Entry memory existing = order_table.select(item.orderID);
+        if (existing.fields.length == 16) {
+            return 0;
+        }
 
         Entry memory entry = Entry(item.orderID, new string[](16));
         entry.fields[0] = cast.u256ToString(item.timestamp);
@@ -134,7 +138,7 @@ contract WasteData {
         entry.fields[9] = item.wasteType;
         entry.fields[10] = cast.u256ToString(item.quantity);
         entry.fields[11] = cast.u256ToString(item.score);
-        entry.fields[12] = cast.u256ToString(item.resourceCoin);
+        entry.fields[12] = cast.s256ToString(item.resourceCoin);
         entry.fields[13] = cast.addrToString(item.receiverAddress);
         entry.fields[14] = cast.u256ToString(0);
         entry.fields[15] = "init";
@@ -148,16 +152,21 @@ contract WasteData {
     
     function update(UpdateItem memory item)
     public
-    returns (uint256)
+    returns (int256)
     {
+        Entry memory existingUpdate = update_table.select(item.orderID);
+        if (existingUpdate.fields.length == 16) {
+            return 0;
+        }
+
         // 通过disposeOrderID查找老order
         Entry memory entry = order_table.select(item.disposeOrderID);
-        uint256  oldResourceCoin;
+        int256 oldResourceCoin;
         if(entry.fields.length != 16){
             return 0;
         }
-        oldResourceCoin = cast.stringToU256(entry.fields[12]);
-        int256 newResourceCoin = int256(oldResourceCoin) + item.resourceCoinChange;
+        oldResourceCoin = cast.stringToS256(entry.fields[12]);
+        int256 newResourceCoin = oldResourceCoin + item.resourceCoinChange;
         UpdateField[] memory updateFields = new UpdateField[](15);
         updateFields[0] = UpdateField("timestamp", cast.u256ToString(item.timestamp));
         updateFields[1] = UpdateField("user_id",item.userID);
@@ -171,7 +180,7 @@ contract WasteData {
         updateFields[9] = UpdateField("waste_type", item.wasteType);
         updateFields[10] = UpdateField("quantity", cast.u256ToString(item.quantity));
         updateFields[11] = UpdateField("score", cast.u256ToString(item.score));
-        updateFields[12] = UpdateField("resource_coin", cast.u256ToString(uint256(newResourceCoin)));
+        updateFields[12] = UpdateField("resource_coin", cast.s256ToString(newResourceCoin));
         updateFields[13] = UpdateField("receiver_address", entry.fields[13]);
         updateFields[14] = UpdateField("comment", item.comment);
         int32 result = order_table.update(item.disposeOrderID, updateFields);
@@ -220,7 +229,7 @@ contract WasteData {
         item.wasteType = entry.fields[9];
         item.quantity = cast.stringToU256(entry.fields[10]);
         item.score = cast.stringToU256(entry.fields[11]);
-        item.resourceCoin = cast.stringToU256(entry.fields[12]);
+        item.resourceCoin = cast.stringToS256(entry.fields[12]);
         item.receiverAddress = cast.stringToAddr(entry.fields[13]);
         return item;
     }

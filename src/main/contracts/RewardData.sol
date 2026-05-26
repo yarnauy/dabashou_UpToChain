@@ -28,12 +28,21 @@ contract RewardData {
         uint256 amount;
         string comments;
     }
+    struct ActivityRewardItem {
+        uint256 timestamp;
+        string orderID;
+        string userID;
+        string activityID;
+        int256 resourceCoin;
+    }
     Cast constant cast =  Cast(address(0x100f));
     TableManager constant tm =  TableManager(address(0x1002));
     Table disposeRewardTable;
     Table propertyRewardTable;
+    Table activityRewardTable;
     string constant DISPOSE_REWARD_TABLE = "dispose_reward_v2";
     string constant PROPERTY_REWARD_TABLE = "property_reward_v2";
+    string constant ACTIVITY_REWARD_TABLE = "activity_reward_v1";
 
     constructor() {
         // create dispose reward table
@@ -66,8 +75,24 @@ contract RewardData {
         address t2 = tm.openTable(PROPERTY_REWARD_TABLE);
         require(t2 != address(0x0), "propertyRewardTable error");
         propertyRewardTable = Table(t2);
+        // create activity reward table
+        string[] memory activityColumns = new string[](4);
+        activityColumns[0] = "timestamp";
+        activityColumns[1] = "user_id";
+        activityColumns[2] = "activity_id";
+        activityColumns[3] = "resource_coin";
+        TableInfo memory activityTf = TableInfo(KeyOrder.Lexicographic, "order_id", activityColumns);
+        tm.createTable(ACTIVITY_REWARD_TABLE, activityTf);
+        address t3 = tm.openTable(ACTIVITY_REWARD_TABLE);
+        require(t3 != address(0x0), "activityRewardTable error");
+        activityRewardTable = Table(t3);
     }
     function insertDisposeReward(DisposeRewardItem memory item) public returns(int32) {
+        Entry memory existing = disposeRewardTable.select(item.orderID);
+        if (existing.fields.length == 8) {
+            return 0;
+        }
+
         Entry memory entry = Entry(item.orderID, new string[](8));
         entry.fields[0] = item.timestamp;
         entry.fields[1] = item.category;
@@ -80,6 +105,11 @@ contract RewardData {
         return disposeRewardTable.insert(entry);
     }
     function insertPropertyReward(PropertyRewardItem memory item) public returns(int32) {
+        Entry memory existing = propertyRewardTable.select(item.orderID);
+        if (existing.fields.length == 8) {
+            return 0;
+        }
+
         Entry memory entry = Entry(item.orderID, new string[](8));
         entry.fields[0] = item.timestamp;
         entry.fields[1] = item.courtID;
@@ -91,11 +121,27 @@ contract RewardData {
         entry.fields[7] = item.comments;
         return propertyRewardTable.insert(entry);
     }
+    function insertActivityReward(ActivityRewardItem memory item) public returns(int32) {
+        Entry memory existing = activityRewardTable.select(item.orderID);
+        if (existing.fields.length == 4) {
+            return 0;
+        }
+
+        Entry memory entry = Entry(item.orderID, new string[](4));
+        entry.fields[0] = cast.u256ToString(item.timestamp);
+        entry.fields[1] = item.userID;
+        entry.fields[2] = item.activityID;
+        entry.fields[3] = cast.s256ToString(item.resourceCoin);
+        return activityRewardTable.insert(entry);
+    }
     function getDisposeRewardTable() public view returns (Table) {
         return disposeRewardTable;
     }
     function getPropertyRewardTable() public view returns (Table) {
         return propertyRewardTable;
+    }
+    function getActivityRewardTable() public view returns (Table) {
+        return activityRewardTable;
     }
     // 按orderID查找DisposeRewardItem
     function getDisposeRewardByOrderID(string memory orderID) public view returns (DisposeRewardItem memory) {
@@ -127,6 +173,18 @@ contract RewardData {
         item.ratio = cast.stringToU256(entry.fields[5]);
         item.amount = cast.stringToU256(entry.fields[6]);
         item.comments = entry.fields[7];
+        return item;
+    }
+    // 按orderID查找ActivityRewardItem
+    function getActivityRewardByOrderID(string memory orderID) public view returns (ActivityRewardItem memory) {
+        Entry memory entry = activityRewardTable.select(orderID);
+        require(entry.fields.length == 4, "not found");
+        ActivityRewardItem memory item;
+        item.timestamp = cast.stringToU256(entry.fields[0]);
+        item.orderID = orderID;
+        item.userID = entry.fields[1];
+        item.activityID = entry.fields[2];
+        item.resourceCoin = cast.stringToS256(entry.fields[3]);
         return item;
     }
 }
